@@ -1,0 +1,30 @@
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+
+from engine.engine import MAIN_ENGINE
+
+Base = declarative_base()
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String)
+    password = Column(String)
+    email = Column(String(100), unique=True)
+    country = Column(String)
+    zone = Column(String)
+    phone_number = Column(String)
+
+    def __init__(self, username, password, email, country, zone, phone_number):
+        self.username = username
+        self.password = password
+        self.email = email
+        self.country = country
+        self.zone = zone
+        self.phone_number = phone_number
+
+
+Base.metadata.create_all(MAIN_ENGINE)
+
