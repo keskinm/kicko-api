@@ -60,7 +60,7 @@ def get_job_offers():
     input_json = request.get_json(force=True)
     user_id = input_json["id"]
     result = q.make_query(JobOffers, JobOffers.user_id == user_id)
-    result = jsonify({"data": result})
+    result = jsonify({"data": list(result)})
     result.status_code = 200
     return result
 

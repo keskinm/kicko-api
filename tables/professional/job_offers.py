@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
 
 from engine.engine import MAIN_ENGINE
 from tables.professional.user import User
@@ -17,7 +16,6 @@ class JobOffers(Base):
     requires = Column(String)
 
     user_id = Column(Integer, ForeignKey(User.id))
-    user = relationship('User', foreign_keys='User.user_id')
 
     def __init__(self, name, description, requires, user_id):
         self.name = name
