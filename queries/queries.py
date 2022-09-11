@@ -27,10 +27,9 @@ class Queries:
     #
     #     return aggregated
 
-    def get(self, handling_class, filters=None):
-        user = self.session.query(handling_class).filter(filters)
-        d = (list(user))
-        return d
+    def make_query(self, handling_class, filters=None):
+        query_result = self.session.query(handling_class).filter(filters)
+        return query_result
 
     def delete_by_column(self, handling_class, column_name, value):
         self.session.query(handling_class).filter(getattr(self.handling_class, column_name) == value).delete()
@@ -38,8 +37,8 @@ class Queries:
 
 # q = Queries()
 # q.delete_by_column(User, "email", "toto44@gmail.com")
-# r = (q.get(User))
-# print(r)
+# r = (q.make_query(User, User.email=="toto7@gmail.com"))
+# print("R", r)
 
 # # q.delete_by_column('zone', 'Foo')
 # agg = q.aggregate_by_column('zone')
