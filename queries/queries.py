@@ -27,16 +27,21 @@ class Queries:
     #
     #     return aggregated
 
-    def get(self, handling_class):
-        user = self.session.query(handling_class).filter()
+    def get(self, handling_class, filters=None):
+        user = self.session.query(handling_class).filter(filters)
         d = (list(user))
         return d
 
-    # def delete_by_column(self, column_name, value):
-    #     self.session.query(User).filter(getattr(self.handling_class, column_name) == value).delete()
-    #     self.session.commit()
+    def delete_by_column(self, handling_class, column_name, value):
+        self.session.query(handling_class).filter(getattr(self.handling_class, column_name) == value).delete()
+        self.session.commit()
 
 # q = Queries()
+# q.delete_by_column(User, "email", "toto44@gmail.com")
+# r = (q.get(User))
+# print(r)
+
 # # q.delete_by_column('zone', 'Foo')
 # agg = q.aggregate_by_column('zone')
 # print(agg)
+
