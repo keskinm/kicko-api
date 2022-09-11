@@ -70,7 +70,7 @@ def delete_job_offer():
     input_json = request.get_json(force=True)
     user_id = input_json["user_id"]
     job_offer_id = input_json["id"]
-    delete_row(JobOffers, and_(JobOffers.user_id == user_id, JobOffers.id == job_offer_id))
+    delete_row(JobOffers, [JobOffers.user_id == user_id, JobOffers.id == job_offer_id])
     resp = jsonify({})
     resp.status_code = 200
     return resp

@@ -5,7 +5,7 @@ from engine.engine import MAIN_ENGINE
 
 def delete_row(handling_class, filters):
     session = sessionmaker(bind=MAIN_ENGINE)()
-    session.query(handling_class).filter(filters).delete()
+    session.query(handling_class).filter(*filters).delete()
     session.commit()
     session.close()
 
