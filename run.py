@@ -19,7 +19,7 @@ q = Queries()
 add = Add()
 
 
-@app.route("/api/user", methods=["GET", "OPTIONS"])
+@app.route("/api/user", methods=["GET"])
 def get_user():
     auth_header = request.headers.get('Authorization')
     if auth_header:
