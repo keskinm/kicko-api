@@ -8,6 +8,7 @@ from models import encode_auth_token, decode_auth_token
 # from bson.json_util import dumps
 
 from queries.queries import Queries
+from tables.professional.job_offers import JobOffers
 from tables.professional.user import User
 
 app = Flask(__name__)
@@ -52,6 +53,25 @@ def get_user():
             'message': 'Provide a valid auth token.'
         }
         return make_response(jsonify(responseObject)), 200
+
+
+@app.route("/api/get_job_offers", methods=["POST"])
+def get_job_offers():
+    input_json = request.get_json(force=True)
+    user_id = input_json["id"]
+    result = q.make_query(JobOffers, JobOffers.user_id == user_id)
+    result = jsonify({"data": result})
+    result.status_code = 200
+    return result
+
+
+@app.route("/api/add_job_offer", methods=["POST"])
+def add_job_offer():
+    input_json = request.get_json(force=True)
+    add.add(JobOffers, input_json)
+    resp = jsonify({})
+    resp.status_code = 200
+    return resp
 
 
 @app.route("/api/user_register", methods=["POST"])
