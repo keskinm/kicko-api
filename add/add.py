@@ -5,13 +5,12 @@ from tables.professional.user import User
 
 
 class Add:
-    def __init__(self, handling_class=User):
-        self.session = sessionmaker(bind=MAIN_ENGINE)()
-        self.handling_class = handling_class
-
-    def add(self, handling_class, content):
-        self.session.add(handling_class(**content))
-        self.session.commit()
+    @staticmethod
+    def add(handling_class, content):
+        session = sessionmaker(bind=MAIN_ENGINE)()
+        session.add(handling_class(**content))
+        session.commit()
+        session.close()
 
     # def delete_by_column(self, column_name, value):
     #     self.session.query(User).filter(getattr(self.handling_class, column_name) == value).delete()

@@ -5,10 +5,6 @@ from tables.professional.user import User
 
 
 class Queries:
-    def __init__(self, handling_class=User):
-        self.session = sessionmaker(bind=MAIN_ENGINE)()
-        self.handling_class = handling_class
-
     # def unique(self, column_name):
     #     providers_table = self.session.query(User).filter()
     #     zones = list(map(lambda x: getattr(x, column_name), list(providers_table)))
@@ -27,15 +23,21 @@ class Queries:
     #
     #     return aggregated
 
-    def make_query(self, handling_class, filters=None):
-        query_result = self.session.query(handling_class).filter(filters)
+    @staticmethod
+    def make_query(handling_class, filters=None):
+        session = sessionmaker(bind=MAIN_ENGINE)()
+        query_result = session.query(handling_class).filter(filters)
+        session.close()
         return query_result
 
-    def delete_by_column(self, handling_class, column_name, value):
-        self.session.query(handling_class).filter(
-            getattr(self.handling_class, column_name) == value
+    @staticmethod
+    def delete_by_column(handling_class, column_name, value):
+        session = sessionmaker(bind=MAIN_ENGINE)()
+        session.query(handling_class).filter(
+            getattr(handling_class, column_name) == value
         ).delete()
-        self.session.commit()
+        session.commit()
+        session.close()
 
     @staticmethod
     def row_to_dict(row):
