@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
+from sqlalchemy import and_
 
 from models import encode_auth_token, decode_auth_token
 from queries.common import add_row, delete_row, make_query, row_to_dict
@@ -69,7 +70,7 @@ def delete_job_offer():
     input_json = request.get_json(force=True)
     user_id = input_json["user_id"]
     job_offer_id = input_json["id"]
-    delete_row(JobOffers, JobOffers.user_id == user_id and JobOffers.id == job_offer_id)
+    delete_row(JobOffers, and_(JobOffers.user_id == user_id, JobOffers.id == job_offer_id))
     resp = jsonify({})
     resp.status_code = 200
     return resp
@@ -90,7 +91,7 @@ def get_token():
     username = input_json["username"]
     password = input_json["password"]
     query_result = make_query(
-        User, filters=User.username == username and User.password == password
+        User, filters=and_(User.username == username, User.password == password)
     ).first()
     if query_result:
         token = encode_auth_token(username, app.config.get("SECRET_KEY"))
