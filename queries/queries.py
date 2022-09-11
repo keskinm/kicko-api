@@ -35,6 +35,13 @@ class Queries:
         self.session.query(handling_class).filter(getattr(self.handling_class, column_name) == value).delete()
         self.session.commit()
 
+    @staticmethod
+    def row_to_dict(row):
+        d = {}
+        for column in row.__table__.columns:
+            d[column.name] = str(getattr(row, column.name))
+        return d
+
 # q = Queries()
 # q.delete_by_column(User, "email", "toto44@gmail.com")
 # r = (q.make_query(User, User.email=="toto7@gmail.com"))
