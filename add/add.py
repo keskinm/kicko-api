@@ -21,4 +21,3 @@ class Add:
 # # q.delete_by_column('zone', 'Foo')
 # agg = q.aggregate_by_column('zone')
 # print(agg)
-

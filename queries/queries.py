@@ -32,7 +32,9 @@ class Queries:
         return query_result
 
     def delete_by_column(self, handling_class, column_name, value):
-        self.session.query(handling_class).filter(getattr(self.handling_class, column_name) == value).delete()
+        self.session.query(handling_class).filter(
+            getattr(self.handling_class, column_name) == value
+        ).delete()
         self.session.commit()
 
     @staticmethod
@@ -42,6 +44,7 @@ class Queries:
             d[column.name] = str(getattr(row, column.name))
         return d
 
+
 # q = Queries()
 # q.delete_by_column(User, "email", "toto44@gmail.com")
 # r = (q.make_query(User, User.email=="toto7@gmail.com"))
@@ -50,4 +53,3 @@ class Queries:
 # # q.delete_by_column('zone', 'Foo')
 # agg = q.aggregate_by_column('zone')
 # print(agg)
-

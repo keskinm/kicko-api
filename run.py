@@ -5,7 +5,6 @@ from flask_cors import CORS
 
 from add.add import Add
 from models import encode_auth_token, decode_auth_token
-# from bson.json_util import dumps
 
 from queries.queries import Queries
 from tables.professional.job_offers import JobOffers
@@ -22,37 +21,31 @@ add = Add()
 
 @app.route("/api/user", methods=["GET"])
 def get_user():
-    auth_header = request.headers.get('Authorization')
+    auth_header = request.headers.get("Authorization")
     if auth_header:
         print("AUTH TOKEN NON VIDE")
         auth_token = auth_header.split(" ")[1]
 
-        succeed, resp = decode_auth_token(auth_token, app.config.get('SECRET_KEY'))
+        succeed, resp = decode_auth_token(auth_token, app.config.get("SECRET_KEY"))
         if succeed:
             user = q.make_query(User, filters=User.email == resp).first()
-            responseObject = {
-                'status': 'success',
-                'data': {
-                    'username': user.username,
-                    'email': user.email,
-                    'password': user.password,
-                }
+            response_object = {
+                "status": "success",
+                "data": {
+                    "username": user.username,
+                    "email": user.email,
+                    "password": user.password,
+                },
             }
-            return make_response(jsonify(responseObject)), 200
-        responseObject = {
-            'status': 'fail',
-            'message': resp
-        }
-        return make_response(jsonify(responseObject)), 401
+            return make_response(jsonify(response_object)), 200
+        response_object = {"status": "fail", "message": resp}
+        return make_response(jsonify(response_object)), 401
 
     else:
         # @todo Why a double call everytime with the first one here?
         # Find why and then put fail and 401 response status
-        responseObject = {
-            'status': 'success',
-            'message': 'Provide a valid auth token.'
-        }
-        return make_response(jsonify(responseObject)), 200
+        response_object = {"status": "success", "message": "Provide a valid auth token."}
+        return make_response(jsonify(response_object)), 200
 
 
 @app.route("/api/get_job_offers", methods=["POST"])
@@ -89,18 +82,21 @@ def get_token():
     input_json = request.get_json(force=True)
     username = input_json["username"]
     password = input_json["password"]
-    query_result = q.make_query(User, filters=User.username == username and User.password == password).first()
+    query_result = q.make_query(
+        User, filters=User.username == username and User.password == password
+    ).first()
     if query_result:
-        token = encode_auth_token(username, app.config.get('SECRET_KEY'))
+        token = encode_auth_token(username, app.config.get("SECRET_KEY"))
         result = jsonify({"token": token})
         result.status_code = 200
     else:
         result = jsonify({})
     return result
 
+
 @app.route("/")
 def home():
-    return 'home'
+    return "home"
 
 
 if __name__ == "__main__":
