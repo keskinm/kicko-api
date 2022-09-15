@@ -32,6 +32,7 @@ def get_user():
                     "username": user.username,
                     "email": user.email,
                     "password": user.password,
+                    "id": str(user.id),
                 },
             }
             return make_response(jsonify(response_object)), 200
