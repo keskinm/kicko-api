@@ -6,6 +6,7 @@ from sqlalchemy import and_
 
 from models import encode_auth_token, decode_auth_token
 from queries.common import add_row, delete_row, make_query, row_to_dict
+from tables.professional.business import Business
 
 from tables.professional.job_offers import JobOffers
 from tables.professional.user import User
@@ -46,6 +47,16 @@ def get_user():
         return make_response(jsonify(response_object)), 200
 
 
+@app.route("/api/get_business", methods=["POST"])
+def get_business():
+    input_json = request.get_json(force=True)
+    user_id = input_json["user_id"]
+    result = row_to_dict(make_query(Business, Business.user_id == user_id).first())
+    result = jsonify(result)
+    result.status_code = 200
+    return result
+
+
 @app.route("/api/get_job_offers", methods=["POST"])
 def get_job_offers():
     input_json = request.get_json(force=True)
@@ -81,6 +92,8 @@ def delete_job_offer():
 def user_register():
     input_json = request.get_json(force=True)
     add_row(User, input_json)
+    user_id = row_to_dict(make_query(User, User.email == input_json["email"]).first())
+    add_row(Business, {"user_id": user_id["id"]})
     resp = jsonify({})
     resp.status_code = 200
     return resp
