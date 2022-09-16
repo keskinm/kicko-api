@@ -60,8 +60,9 @@ def get_business():
 @app.route("/api/update_business_fields", methods=["POST"])
 def update_business_fields():
     input_json = request.get_json(force=True)
-    business = make_query(Business, Business.user_id == input_json.pop("user_id")).first()
-    update(business, input_json)
+    user_id = input_json.pop("user_id")
+    query, session = make_query(Business, Business.user_id == user_id, end_session=False)
+    update(session, query.first(), input_json)
     result = jsonify({})
     result.status_code = 200
     return result

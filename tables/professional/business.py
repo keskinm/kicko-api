@@ -13,6 +13,7 @@ class Business(Base):
     id = Column(Integer, primary_key=True, unique=True)
     user_id = Column(Integer, ForeignKey(User.id))
     email = Column(String(100), unique=True)
+    name = Column(String(100))
     country = Column(String)
     city = Column(String)
     phone_number = Column(String)
@@ -20,11 +21,13 @@ class Business(Base):
     def __init__(
         self,
         user_id,
+        name=None,
         email=None,
         country=None,
         city=None,
         phone_number=None,
     ):
+        self.name = name
         self.user_id = user_id
         self.email = email
         self.country = country
