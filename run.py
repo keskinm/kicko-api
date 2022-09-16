@@ -5,7 +5,7 @@ from flask_cors import CORS
 from sqlalchemy import and_
 
 from models import encode_auth_token, decode_auth_token
-from queries.common import add_row, delete_row, make_query, row_to_dict
+from queries.common import add_row, delete_row, make_query, row_to_dict, update
 from tables.professional.business import Business
 
 from tables.professional.job_offers import JobOffers
@@ -53,6 +53,16 @@ def get_business():
     user_id = input_json["user_id"]
     result = row_to_dict(make_query(Business, Business.user_id == user_id).first())
     result = jsonify(result)
+    result.status_code = 200
+    return result
+
+
+@app.route("/api/update_business_fields", methods=["POST"])
+def update_business_fields():
+    input_json = request.get_json(force=True)
+    business = make_query(Business, Business.user_id == input_json.pop("user_id")).first()
+    update(business, input_json)
+    result = jsonify({})
     result.status_code = 200
     return result
 

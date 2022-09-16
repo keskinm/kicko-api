@@ -31,6 +31,13 @@ def row_to_dict(row):
     return d
 
 
+def update(table_row, fields):
+    session = sessionmaker(bind=MAIN_ENGINE)()
+    for key, value in fields.items():
+        setattr(table_row, key, value)
+    session.close()
+
+
 # def unique(self, column_name):
 #     providers_table = self.session.query(User).filter()
 #     zones = list(map(lambda x: getattr(x, column_name), list(providers_table)))
