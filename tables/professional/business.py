@@ -17,6 +17,7 @@ class Business(Base):
     country = Column(String)
     city = Column(String)
     phone_number = Column(String)
+    image_id = Column(String)
 
     def __init__(
         self,
@@ -26,6 +27,7 @@ class Business(Base):
         country=None,
         city=None,
         phone_number=None,
+        image_id=None
     ):
         self.name = name
         self.user_id = user_id
@@ -33,6 +35,7 @@ class Business(Base):
         self.country = country
         self.city = city
         self.phone_number = phone_number
+        self.image_id = image_id
 
 
 Base.metadata.create_all(MAIN_ENGINE)
