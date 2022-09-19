@@ -9,7 +9,7 @@ from queries.common import add_row, delete_row, make_query, row_to_dict, update
 from tables.professional.business import Business
 
 from tables.professional.job_offers import JobOffers
-from tables.professional.user import User
+from tables.professional.professional import Professional
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
@@ -17,8 +17,8 @@ app.secret_key = os.urandom(12)
 CORS(app)
 
 
-@app.route("/api/user", methods=["GET"])
-def get_user():
+@app.route("/api/professional", methods=["GET"])
+def get_professional():
     auth_header = request.headers.get("Authorization")
     if auth_header:
         print("AUTH TOKEN NON VIDE")
@@ -26,7 +26,7 @@ def get_user():
 
         succeed, resp = decode_auth_token(auth_token, app.config.get("SECRET_KEY"))
         if succeed:
-            user = make_query(User, filters=User.email == resp).first()
+            user = make_query(Professional, filters=Professional.email == resp).first()
             response_object = {
                 "status": "success",
                 "data": {
@@ -50,8 +50,8 @@ def get_user():
 @app.route("/api/get_business", methods=["POST"])
 def get_business():
     input_json = request.get_json(force=True)
-    user_id = input_json["user_id"]
-    result = row_to_dict(make_query(Business, Business.user_id == user_id).first())
+    professional_id = input_json["professional_id"]
+    result = row_to_dict(make_query(Business, Business.professional_id == professional_id).first())
     result = jsonify(result)
     result.status_code = 200
     return result
@@ -60,8 +60,8 @@ def get_business():
 @app.route("/api/update_business_fields", methods=["POST"])
 def update_business_fields():
     input_json = request.get_json(force=True)
-    user_id = input_json.pop("user_id")
-    query, session = make_query(Business, Business.user_id == user_id, end_session=False)
+    professional_id = input_json.pop("professional_id")
+    query, session = make_query(Business, Business.professional_id == professional_id, end_session=False)
     update(session, query.first(), input_json)
     result = jsonify({})
     result.status_code = 200
@@ -71,8 +71,8 @@ def update_business_fields():
 @app.route("/api/get_job_offers", methods=["POST"])
 def get_job_offers():
     input_json = request.get_json(force=True)
-    user_id = input_json["user_id"]
-    result = make_query(JobOffers, JobOffers.user_id == user_id)
+    professional_id = input_json["professional_id"]
+    result = make_query(JobOffers, JobOffers.professional_id == professional_id)
     result = [row_to_dict(o) for o in result]
     result = jsonify(list(result))
     result.status_code = 200
@@ -91,20 +91,20 @@ def add_job_offer():
 @app.route("/api/delete_job_offer", methods=["POST"])
 def delete_job_offer():
     input_json = request.get_json(force=True)
-    user_id = input_json["user_id"]
+    professional_id = input_json["professional_id"]
     job_offer_id = input_json["id"]
-    delete_row(JobOffers, [JobOffers.user_id == user_id, JobOffers.id == job_offer_id])
+    delete_row(JobOffers, [JobOffers.professional_id == professional_id, JobOffers.id == job_offer_id])
     resp = jsonify({})
     resp.status_code = 200
     return resp
 
 
-@app.route("/api/user_register", methods=["POST"])
-def user_register():
+@app.route("/api/professional_register", methods=["POST"])
+def professional_register():
     input_json = request.get_json(force=True)
-    add_row(User, input_json)
-    user_id = row_to_dict(make_query(User, User.email == input_json["email"]).first())
-    add_row(Business, {"user_id": user_id["id"]})
+    add_row(Professional, input_json)
+    professional_id = row_to_dict(make_query(Professional, Professional.email == input_json["email"]).first())
+    add_row(Business, {"professional_id": professional_id["id"]})
     resp = jsonify({})
     resp.status_code = 200
     return resp
@@ -116,7 +116,7 @@ def get_token():
     username = input_json["username"]
     password = input_json["password"]
     query_result = make_query(
-        User, filters=and_(User.username == username, User.password == password)
+        Professional, filters=and_(Professional.username == username, Professional.password == password)
     ).first()
     if query_result:
         token = encode_auth_token(username, app.config.get("SECRET_KEY"))

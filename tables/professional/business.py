@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from engine.engine import MAIN_ENGINE
 
-from tables.professional.user import User
+from tables.professional.professional import Professional
 
 Base = declarative_base()
 
@@ -11,7 +11,7 @@ class Business(Base):
     __tablename__ = "business"
 
     id = Column(Integer, primary_key=True, unique=True)
-    user_id = Column(Integer, ForeignKey(User.id))
+    professional_id = Column(Integer, ForeignKey(Professional.id))
     email = Column(String(100), unique=True)
     name = Column(String(100))
     country = Column(String)
@@ -21,7 +21,7 @@ class Business(Base):
 
     def __init__(
         self,
-        user_id,
+        professional_id,
         name=None,
         email=None,
         country=None,
@@ -30,7 +30,7 @@ class Business(Base):
         image_id=None
     ):
         self.name = name
-        self.user_id = user_id
+        self.professional_id = professional_id
         self.email = email
         self.country = country
         self.city = city
