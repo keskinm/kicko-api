@@ -6,6 +6,7 @@ from sqlalchemy import and_
 
 from models import encode_auth_token, decode_auth_token
 from queries.common import add_row, delete_row, make_query, row_to_dict, update
+from tables.candidate.candidate import Candidate
 from tables.professional.business import Business
 
 from tables.professional.job_offers import JobOffers
@@ -20,13 +21,23 @@ CORS(app)
 @app.route("/api/professional", methods=["GET"])
 def get_professional():
     auth_header = request.headers.get("Authorization")
+    return get_user(table=Professional, auth_header=auth_header)
+
+
+@app.route("/api/candidate", methods=["GET"])
+def get_candidate():
+    auth_header = request.headers.get("Authorization")
+    return get_user(table=Candidate, auth_header=auth_header)
+
+
+def get_user(table, auth_header):
     if auth_header:
         print("AUTH TOKEN NON VIDE")
         auth_token = auth_header.split(" ")[1]
 
         succeed, resp = decode_auth_token(auth_token, app.config.get("SECRET_KEY"))
         if succeed:
-            user = make_query(Professional, filters=Professional.email == resp).first()
+            user = make_query(table, filters=table.email == resp).first()
             response_object = {
                 "status": "success",
                 "data": {
@@ -68,11 +79,21 @@ def update_business_fields():
     return result
 
 
-@app.route("/api/get_job_offers", methods=["POST"])
-def get_job_offers():
+@app.route("/api/professional_get_job_offers", methods=["POST"])
+def professional_get_job_offers():
     input_json = request.get_json(force=True)
     professional_id = input_json["professional_id"]
     result = make_query(JobOffers, JobOffers.professional_id == professional_id)
+    result = [row_to_dict(o) for o in result]
+    result = jsonify(list(result))
+    result.status_code = 200
+    return result
+
+
+@app.route("/api/candidate_get_job_offers", methods=["POST"])
+def candidate_get_job_offers():
+    input_json = request.get_json(force=True)
+    result = make_query(JobOffers, None)
     result = [row_to_dict(o) for o in result]
     result = jsonify(list(result))
     result.status_code = 200
@@ -110,13 +131,30 @@ def professional_register():
     return resp
 
 
-@app.route("/api/authentication-token", methods=["POST"])
-def get_token():
+@app.route("/api/candidate_register", methods=["POST"])
+def candidate_register():
     input_json = request.get_json(force=True)
+    add_row(Candidate, input_json)
+    resp = jsonify({})
+    resp.status_code = 200
+    return resp
+
+
+@app.route("/api/professional-authentication-token", methods=["POST"])
+def professional_get_token():
+    input_json = request.get_json(force=True)
+    return get_token(table=Professional, input_json=input_json)
+
+@app.route("/api/candidate-authentication-token", methods=["POST"])
+def candidate_get_token():
+    input_json = request.get_json(force=True)
+    return get_token(table=Candidate, input_json=input_json)
+
+def get_token(table, input_json):
     username = input_json["username"]
     password = input_json["password"]
     query_result = make_query(
-        Professional, filters=and_(Professional.username == username, Professional.password == password)
+        Professional, filters=and_(table.username == username, table.password == password)
     ).first()
     if query_result:
         token = encode_auth_token(username, app.config.get("SECRET_KEY"))
@@ -124,6 +162,7 @@ def get_token():
         result.status_code = 200
     else:
         result = jsonify({})
+        # result.status_code = 401
     return result
 
 

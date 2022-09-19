@@ -19,7 +19,10 @@ def add_row(handling_class, content):
 
 def make_query(handling_class, filters=None, end_session=True):
     session = sessionmaker(bind=MAIN_ENGINE)()
-    query_result = session.query(handling_class).filter(filters)
+    if filters is not None:
+        query_result = session.query(handling_class).filter(filters)
+    else:
+        query_result = session.query(handling_class).filter()
     if not end_session:
         return query_result, session
     else:
