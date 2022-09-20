@@ -19,8 +19,6 @@ app.secret_key = os.urandom(12)
 CORS(app)
 
 
-# @todo JOBOFFERS FOREIGN KEY SHOULD BE BUSINESSID, NOT PROFESSIONALID
-
 
 @app.route("/api/professional", methods=["GET"])
 def get_professional():
