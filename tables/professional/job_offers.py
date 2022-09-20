@@ -15,13 +15,13 @@ class JobOffers(Base):
     description = Column(String)
     requires = Column(String)
 
-    professional_id = Column(Integer, ForeignKey(Professional.id))
+    business_id = Column(Integer, ForeignKey(Professional.id))
 
-    def __init__(self, name, description, requires, professional_id):
+    def __init__(self, name, description, requires, business_id):
         self.name = name
         self.description = description
         self.requires = requires
-        self.professional_id = professional_id
+        self.business_id = business_id
 
 
 Base.metadata.create_all(MAIN_ENGINE)

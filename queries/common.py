@@ -48,12 +48,19 @@ def update(session, table_row, fields):
     session.close()
 
 
-# def unique(self, column_name):
-#     providers_table = self.session.query(User).filter()
-#     zones = list(map(lambda x: getattr(x, column_name), list(providers_table)))
-#     zones = list(dict.fromkeys(zones))
-#     return zones
-#
+def unique(handling_class, column_name, filters=None):
+    session = sessionmaker(bind=MAIN_ENGINE)()
+    if filters is not None:
+        providers_table = session.query(handling_class).filter(filters)
+    else:
+        providers_table = session.query(handling_class).filter()
+    _list = list(map(lambda x: getattr(x, column_name), list(providers_table)))
+    _unique = list(dict.fromkeys(_list))
+    if column_name.endswith("id"):
+        _unique = [str(v) for v in _unique]
+    session.close()
+    return _unique
+
 # def aggregate_by_column(self, column_name, selection=None):
 #     unique_column = self.unique(column_name)
 #

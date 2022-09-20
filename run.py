@@ -6,7 +6,7 @@ from sqlalchemy import and_
 
 import syntax
 from models import encode_auth_token, decode_auth_token
-from queries.common import add_row, delete_row, make_query, row_to_dict, update
+from queries.common import add_row, delete_row, make_query, row_to_dict, update, unique
 from tables.candidate.candidate import Candidate
 from tables.professional.business import Business
 
@@ -93,8 +93,9 @@ def update_business_fields():
 @app.route("/api/professional_get_job_offers", methods=["POST"])
 def professional_get_job_offers():
     input_json = request.get_json(force=True)
-    professional_id = input_json["professional_id"]
-    result = make_query(JobOffers, JobOffers.professional_id == professional_id)
+    legit_business = unique(Business, "id", Business.professional_id == input_json["professional_id"])
+
+    result = make_query(JobOffers, JobOffers.business_id.in_(legit_business))
     result = [row_to_dict(o) for o in result]
     result = jsonify(list(result))
     result.status_code = 200
@@ -108,9 +109,9 @@ def candidate_get_job_offers():
     if "city" in input_json and input_json["city"] != syntax.all_cities:
         legit_business = make_query(Business, Business.city == input_json["city"])
         legit_business = [row_to_dict(o) for o in legit_business]
-        legit_business = list(map(lambda d: d["professional_id"], legit_business))
+        legit_business = list(map(lambda d: d["id"], legit_business))
         legit_business = list(set(legit_business))
-        filters.append(JobOffers.professional_id.in_(legit_business))
+        filters.append(JobOffers.business_id.in_(legit_business))
 
     if len(filters) < 1:
         filters = None
@@ -136,11 +137,13 @@ def add_job_offer():
 @app.route("/api/delete_job_offer", methods=["POST"])
 def delete_job_offer():
     input_json = request.get_json(force=True)
-    professional_id = input_json["professional_id"]
+
+    legit_business = unique(Business, "id", Business.professional_id == input_json["professional_id"])
+
     job_offer_id = input_json["id"]
     delete_row(
         JobOffers,
-        [JobOffers.professional_id == professional_id, JobOffers.id == job_offer_id],
+        [JobOffers.business_id.in_(legit_business), JobOffers.id == job_offer_id],
     )
     resp = jsonify({})
     resp.status_code = 200
