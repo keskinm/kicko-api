@@ -20,6 +20,7 @@ CORS(app)
 
 # @todo JOBOFFERS FOREIGN KEY SHOULD BE BUSINESSID, NOT PROFESSIONALID
 
+
 @app.route("/api/professional", methods=["GET"])
 def get_professional():
     auth_header = request.headers.get("Authorization")
@@ -56,7 +57,10 @@ def get_user(table, auth_header):
     else:
         # @todo Why a double call everytime with the first one here?
         # Find why and then put fail and 401 response status
-        response_object = {"status": "success", "message": "Provide a valid auth token."}
+        response_object = {
+            "status": "success",
+            "message": "Provide a valid auth token.",
+        }
         return make_response(jsonify(response_object)), 200
 
 
@@ -64,7 +68,9 @@ def get_user(table, auth_header):
 def get_business():
     input_json = request.get_json(force=True)
     professional_id = input_json["professional_id"]
-    result = row_to_dict(make_query(Business, Business.professional_id == professional_id).first())
+    result = row_to_dict(
+        make_query(Business, Business.professional_id == professional_id).first()
+    )
     result = jsonify(result)
     result.status_code = 200
     return result
@@ -74,7 +80,9 @@ def get_business():
 def update_business_fields():
     input_json = request.get_json(force=True)
     professional_id = input_json.pop("professional_id")
-    query, session = make_query(Business, Business.professional_id == professional_id, end_session=False)
+    query, session = make_query(
+        Business, Business.professional_id == professional_id, end_session=False
+    )
     update(session, query.first(), input_json)
     result = jsonify({})
     result.status_code = 200
@@ -129,7 +137,10 @@ def delete_job_offer():
     input_json = request.get_json(force=True)
     professional_id = input_json["professional_id"]
     job_offer_id = input_json["id"]
-    delete_row(JobOffers, [JobOffers.professional_id == professional_id, JobOffers.id == job_offer_id])
+    delete_row(
+        JobOffers,
+        [JobOffers.professional_id == professional_id, JobOffers.id == job_offer_id],
+    )
     resp = jsonify({})
     resp.status_code = 200
     return resp
@@ -139,7 +150,9 @@ def delete_job_offer():
 def professional_register():
     input_json = request.get_json(force=True)
     add_row(Professional, input_json)
-    professional_id = row_to_dict(make_query(Professional, Professional.email == input_json["email"]).first())
+    professional_id = row_to_dict(
+        make_query(Professional, Professional.email == input_json["email"]).first()
+    )
     add_row(Business, {"professional_id": professional_id["id"]})
     resp = jsonify({})
     resp.status_code = 200
@@ -160,16 +173,19 @@ def professional_get_token():
     input_json = request.get_json(force=True)
     return get_token(table=Professional, input_json=input_json)
 
+
 @app.route("/api/candidate-authentication-token", methods=["POST"])
 def candidate_get_token():
     input_json = request.get_json(force=True)
     return get_token(table=Candidate, input_json=input_json)
 
+
 def get_token(table, input_json):
     username = input_json["username"]
     password = input_json["password"]
     query_result = make_query(
-        Professional, filters=and_(table.username == username, table.password == password)
+        Professional,
+        filters=and_(table.username == username, table.password == password),
     ).first()
     if query_result:
         token = encode_auth_token(username, app.config.get("SECRET_KEY"))

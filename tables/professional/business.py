@@ -27,7 +27,7 @@ class Business(Base):
         country=None,
         city=None,
         phone_number=None,
-        image_id=None
+        image_id=None,
     ):
         self.name = name
         self.professional_id = professional_id
