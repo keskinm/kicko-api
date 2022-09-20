@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 from sqlalchemy import and_
 
+import syntax
 from models import encode_auth_token, decode_auth_token
 from queries.common import add_row, delete_row, make_query, row_to_dict, update
 from tables.candidate.candidate import Candidate
@@ -104,7 +105,7 @@ def professional_get_job_offers():
 def candidate_get_job_offers():
     input_json = request.get_json(force=True)
     filters = []
-    if "city" in input_json:
+    if "city" in input_json and input_json["city"] != syntax.all_cities:
         legit_business = make_query(Business, Business.city == input_json["city"])
         legit_business = [row_to_dict(o) for o in legit_business]
         legit_business = list(map(lambda d: d["professional_id"], legit_business))
