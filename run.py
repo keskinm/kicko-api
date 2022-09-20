@@ -18,6 +18,8 @@ app.secret_key = os.urandom(12)
 CORS(app)
 
 
+# @todo JOBOFFERS FOREIGN KEY SHOULD BE BUSINESSID, NOT PROFESSIONALID
+
 @app.route("/api/professional", methods=["GET"])
 def get_professional():
     auth_header = request.headers.get("Authorization")
@@ -93,7 +95,20 @@ def professional_get_job_offers():
 @app.route("/api/candidate_get_job_offers", methods=["POST"])
 def candidate_get_job_offers():
     input_json = request.get_json(force=True)
-    result = make_query(JobOffers, None)
+    filters = []
+    if "city" in input_json:
+        legit_business = make_query(Business, Business.city == input_json["city"])
+        legit_business = [row_to_dict(o) for o in legit_business]
+        legit_business = list(map(lambda d: d["professional_id"], legit_business))
+        legit_business = list(set(legit_business))
+        filters.append(JobOffers.professional_id.in_(legit_business))
+
+    if len(filters) < 1:
+        filters = None
+    elif len(filters) < 2:
+        filters = filters[0]
+
+    result = make_query(JobOffers, filters)
     result = [row_to_dict(o) for o in result]
     result = jsonify(list(result))
     result.status_code = 200
