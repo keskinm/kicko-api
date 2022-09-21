@@ -5,15 +5,40 @@ from sqlalchemy import Table, Column, ForeignKey, Integer, create_engine, String
 
 
 def test_many_to_many():
-    Base = declarative_base()
+    Class, Student, session = many_to_many()
+    s = Student()
+    c = Class()
+    session.add(c)
+    session.add(s)
+    session.commit()
+    class_sample = session.query(Class).filter().one()
+    student_sample = session.query(Student).filter().one()
+    class_sample.students.append(student_sample)
+    assert len(student_sample.classes) == 1
+    assert len(class_sample.students) == 1
+    session.close()
+    #  -----------------------------------------------------
+    Class, Student, session = many_to_many()
+    s = Student()
+    c = Class()
+    c.students.append(s)
+    session.add(c)
+    session.commit()
+    class_sample = session.query(Class).one()
+    student_sample = session.query(Student).one()
 
+    assert len(student_sample.classes) == 1
+    assert len(class_sample.students) == 1
+    session.close()
+
+
+def many_to_many():
+    Base = declarative_base()
     if os.path.exists("draft_engine"):
         os.remove("draft_engine")
     draft_engine = create_engine("sqlite:///draft_engine", echo=True)
-
     Session = sessionmaker(bind=draft_engine)
     session = Session()
-
     student_identifier = Table(
         "student_identifier",
         Base.metadata,
@@ -40,33 +65,7 @@ def test_many_to_many():
         )
 
     Base.metadata.create_all(draft_engine)
-
-    s = Student()
-    c = Class()
-    c.students.append(s)
-    session.add(c)
-    session.commit()
-
-    class_sample = session.query(Class).first()
-    student_sample = session.query(Student).first()
-
-    assert len(student_sample.classes) == 1
-    assert len(class_sample.students) == 1
-
-    session.close()
-
+    return Class, Student, session
 
 # test_many_to_many()
 
-
-def drafts():
-    from tables.professional.job_offers import JobOffers
-    from tables.candidate.candidate import Candidate
-    from engine.engine import MAIN_ENGINE
-    Session = sessionmaker(bind=MAIN_ENGINE)
-    session = Session()
-    candidate = session.query(Candidate).filter().one()
-    job_offer = session.query(JobOffers).filter().one().candidate.append(candidate)
-    print(job_offer.candidate)
-
-drafts()

@@ -144,16 +144,18 @@ def add_job_offer():
 def apply_job_offer():
     # @todo to be redo with relationships
     input_json = request.get_json(force=True)
-    job_offer, session = make_query(
+    job_offer_query, session = make_query(
         JobOffers, JobOffers.id == input_json["job_offer_id"], end_session=False
     )
-    candidate, session = make_query(
+    candidate_query, session = make_query(
         Candidate,
         Candidate.id == input_json["candidate_id"],
         end_session=False,
         session=session,
     )
-    job_offer.one().candidate.append(candidate.one())
+    job_offer = job_offer_query.one()
+    candidate = candidate_query.one()
+    job_offer.candidate.append(candidate)
     session.commit()  # IS THIS NECESSARY?
     session.close()
     result = jsonify({})
