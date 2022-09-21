@@ -69,3 +69,16 @@ def many_to_many():
 
 # test_many_to_many()
 
+
+def drafts():
+    from tables.professional.job_offers import JobOffers
+    from tables.candidate.candidate import Candidate
+    from engine.engine import MAIN_ENGINE
+
+    Session = sessionmaker(bind=MAIN_ENGINE)
+    session = Session()
+    candidate_sample = session.query(Candidate).filter().one()
+    job_offer_sample = session.query(JobOffers).filter().one()
+    print(job_offer_sample.candidate)
+
+drafts()

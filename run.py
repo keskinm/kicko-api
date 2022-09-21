@@ -108,6 +108,15 @@ def professional_get_job_offers():
     return result
 
 
+@app.route("/api/candidate_get_job_offer", methods=["POST"])
+def candidate_get_job_offer():
+    input_json = request.get_json(force=True)
+    result = make_query(JobOffers, JobOffers.id == input_json["id"]).one()
+    result = jsonify(row_to_dict(result))
+    result.status_code = 200
+    return result
+
+
 @app.route("/api/candidate_get_job_offers", methods=["POST"])
 def candidate_get_job_offers():
     input_json = request.get_json(force=True)
