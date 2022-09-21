@@ -6,7 +6,14 @@ from sqlalchemy import and_
 
 import syntax
 from models import encode_auth_token, decode_auth_token
-from queries.common import add_row, delete_row, make_query, row_to_dict, update, unique
+from queries.common import (
+    add_row,
+    delete_row,
+    make_query,
+    row_to_dict,
+    replace,
+    unique,
+)
 from tables.candidate.candidate import Candidate
 from tables.professional.business import Business
 
@@ -17,7 +24,6 @@ app = Flask(__name__)
 app.secret_key = os.urandom(12)
 
 CORS(app)
-
 
 
 @app.route("/api/professional", methods=["GET"])
@@ -82,7 +88,7 @@ def update_business_fields():
     query, session = make_query(
         Business, Business.professional_id == professional_id, end_session=False
     )
-    update(session, query.first(), input_json)
+    replace(session, query.first(), input_json)
     result = jsonify({})
     result.status_code = 200
     return result
@@ -91,7 +97,9 @@ def update_business_fields():
 @app.route("/api/professional_get_job_offers", methods=["POST"])
 def professional_get_job_offers():
     input_json = request.get_json(force=True)
-    legit_business = unique(Business, "id", Business.professional_id == input_json["professional_id"])
+    legit_business = unique(
+        Business, "id", Business.professional_id == input_json["professional_id"]
+    )
 
     result = make_query(JobOffers, JobOffers.business_id.in_(legit_business))
     result = [row_to_dict(o) for o in result]
@@ -132,11 +140,27 @@ def add_job_offer():
     return resp
 
 
+@app.route("/api/apply_job_offer", methods=["POST"])
+def apply_job_offer():
+    # @todo to be redo with relationships
+    input_json = request.get_json(force=True)
+    job_offer_id = input_json.pop("id")
+    query, session = make_query(
+        JobOffers, JobOffers.id == job_offer_id, end_session=False
+    )
+    # append(session, query.first(), input_json)
+    result = jsonify({})
+    result.status_code = 200
+    return result
+
+
 @app.route("/api/delete_job_offer", methods=["POST"])
 def delete_job_offer():
     input_json = request.get_json(force=True)
 
-    legit_business = unique(Business, "id", Business.professional_id == input_json["professional_id"])
+    legit_business = unique(
+        Business, "id", Business.professional_id == input_json["professional_id"]
+    )
 
     job_offer_id = input_json["id"]
     delete_row(

@@ -41,7 +41,7 @@ def row_to_dict(row):
     return d
 
 
-def update(session, table_row, fields):
+def replace(session, table_row, fields):
     for key, value in fields.items():
         setattr(table_row, key, value)
     session.commit()
@@ -60,6 +60,7 @@ def unique(handling_class, column_name, filters=None):
         _unique = [str(v) for v in _unique]
     session.close()
     return _unique
+
 
 # def aggregate_by_column(self, column_name, selection=None):
 #     unique_column = self.unique(column_name)
