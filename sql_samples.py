@@ -49,9 +49,7 @@ def test_many_to_many():
     s = Student()
     c = Class()
     c.students.append(s)
-    s.classes.append(c)
     session.add(c)
-    session.add(s)
     session.commit()
 
     class_sample = session.query(Class).first()
