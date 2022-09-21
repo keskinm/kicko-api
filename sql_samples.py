@@ -65,6 +65,8 @@ def drafts():
     from engine.engine import MAIN_ENGINE
     Session = sessionmaker(bind=MAIN_ENGINE)
     session = Session()
-    job_offer = session.query(JobOffers).filter().one()
+    candidate = session.query(Candidate).filter().one()
+    job_offer = session.query(JobOffers).filter().one().candidate.append(candidate)
     print(job_offer.candidate)
 
+drafts()
