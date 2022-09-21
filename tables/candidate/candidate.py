@@ -1,7 +1,10 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
+
 from engine.base import Base
 
 from engine.engine import MAIN_ENGINE
+from tables.associations.associations import job_offer_candidate_association
 
 
 class Candidate(Base):
@@ -15,6 +18,12 @@ class Candidate(Base):
     country = Column(String)
     zone = Column(String)
     phone_number = Column(String)
+
+    job_offers = relationship(
+        "JobOffers",
+        secondary=job_offer_candidate_association,
+        back_populates="candidate",
+    )
 
     def __init__(
         self,

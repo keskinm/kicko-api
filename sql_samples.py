@@ -1,11 +1,10 @@
 import os
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy import Table, Column, ForeignKey, Integer, create_engine, String
 
 
 def test_many_to_many():
-    from sqlalchemy.ext.declarative import declarative_base
-    from sqlalchemy.orm import sessionmaker, relationship
-    from sqlalchemy import Table, Column, ForeignKey, Integer, create_engine, String
-
     Base = declarative_base()
 
     if os.path.exists("draft_engine"):
@@ -29,9 +28,7 @@ def test_many_to_many():
         user_lastName = Column(String(64))
         user_email = Column(String(128), unique=True)
         classes = relationship(
-            "Class",
-            secondary=student_identifier,
-            back_populates="students"
+            "Class", secondary=student_identifier, back_populates="students"
         )
 
     class Class(Base):
@@ -39,9 +36,7 @@ def test_many_to_many():
         class_id = Column(Integer, primary_key=True)
         class_name = Column(String(128), unique=True)
         students = relationship(
-            "Student",
-            secondary=student_identifier,
-            back_populates="classes"
+            "Student", secondary=student_identifier, back_populates="classes"
         )
 
     Base.metadata.create_all(draft_engine)
@@ -58,5 +53,18 @@ def test_many_to_many():
     assert len(student_sample.classes) == 1
     assert len(class_sample.students) == 1
 
+    session.close()
 
-test_many_to_many()
+
+# test_many_to_many()
+
+
+def drafts():
+    from tables.professional.job_offers import JobOffers
+    from tables.candidate.candidate import Candidate
+    from engine.engine import MAIN_ENGINE
+    Session = sessionmaker(bind=MAIN_ENGINE)
+    session = Session()
+    job_offer = session.query(JobOffers).filter().one()
+    print(job_offer.candidate)
+

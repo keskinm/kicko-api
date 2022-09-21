@@ -17,8 +17,8 @@ def add_row(handling_class, content):
     session.close()
 
 
-def make_query(handling_class, filters=None, end_session=True):
-    session = sessionmaker(bind=MAIN_ENGINE)()
+def make_query(handling_class, filters=None, end_session=True, session=None):
+    session = session or sessionmaker(bind=MAIN_ENGINE)()
     if filters is not None:
         query_result = session.query(handling_class).filter(filters)
     else:
