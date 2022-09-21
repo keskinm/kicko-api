@@ -140,9 +140,29 @@ def add_job_offer():
     return resp
 
 
+@app.route("/api/applied_job_offer", methods=["POST"])
+def applied_job_offer():
+    input_json = request.get_json(force=True)
+    job_offer_query, session = make_query(
+        JobOffers, JobOffers.id == input_json["job_offer_id"], end_session=False
+    )
+    candidate_query, session = make_query(
+        Candidate,
+        Candidate.id == input_json["candidate_id"],
+        end_session=False,
+        session=session,
+    )
+    job_offer = job_offer_query.one()
+    candidate = candidate_query.one()
+    result = candidate in job_offer.candidate
+    session.close()
+    result = jsonify(result)
+    result.status_code = 200
+    return result
+
+
 @app.route("/api/apply_job_offer", methods=["POST"])
 def apply_job_offer():
-    # @todo to be redo with relationships
     input_json = request.get_json(force=True)
     job_offer_query, session = make_query(
         JobOffers, JobOffers.id == input_json["job_offer_id"], end_session=False
