@@ -24,4 +24,5 @@ class JobOffers(Base):
         self.business_id = business_id
 
 
-Base.metadata.create_all(MAIN_ENGINE)
+def create():
+    Base.metadata.create_all(MAIN_ENGINE)

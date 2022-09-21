@@ -37,4 +37,5 @@ class Professional(Base):
         self.phone_number = phone_number
 
 
-Base.metadata.create_all(MAIN_ENGINE)
+def create():
+    Base.metadata.create_all(MAIN_ENGINE)

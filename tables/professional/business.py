@@ -38,4 +38,5 @@ class Business(Base):
         self.image_id = image_id
 
 
-Base.metadata.create_all(MAIN_ENGINE)
+def create():
+    Base.metadata.create_all(MAIN_ENGINE)
