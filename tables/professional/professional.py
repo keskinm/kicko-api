@@ -1,9 +1,7 @@
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
+from engine.base import Base
 
 from engine.engine import MAIN_ENGINE
-
-Base = declarative_base()
 
 
 class Professional(Base):

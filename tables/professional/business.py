@@ -1,10 +1,8 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
+from engine.base import Base
 from engine.engine import MAIN_ENGINE
 
 from tables.professional.professional import Professional
-
-Base = declarative_base()
 
 
 class Business(Base):
