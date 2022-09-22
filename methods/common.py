@@ -73,3 +73,58 @@ def unique(handling_class, column_name, filters=None):
 #         aggregated.update({item: item_aggregated_list})
 #
 #     return aggregated
+
+
+from sqlalchemy import and_
+from flask import jsonify, make_response
+from models import decode_auth_token
+from models import encode_auth_token
+from tables.professional.professional import Professional as TProfessional
+
+
+def get_user(table, auth_header, app):
+    if auth_header:
+        print("AUTH TOKEN NON VIDE")
+        auth_token = auth_header.split(" ")[1]
+
+        succeed, resp = decode_auth_token(auth_token, app.config.get("SECRET_KEY"))
+        if succeed:
+            user = make_query(table, filters=table.email == resp).first()
+            response_object = {
+                "status": "success",
+                "data": {
+                    "username": user.username,
+                    "email": user.email,
+                    "password": user.password,
+                    "id": str(user.id),
+                },
+            }
+            return make_response(jsonify(response_object)), 200
+        response_object = {"status": "fail", "message": resp}
+        return make_response(jsonify(response_object)), 401
+
+    else:
+        # @todo Why a double call everytime with the first one here?
+        # Find why and then put fail and 401 response status
+        response_object = {
+            "status": "success",
+            "message": "Provide a valid auth token.",
+        }
+        return make_response(jsonify(response_object)), 200
+
+
+def get_token(table, input_json, app):
+    username = input_json["username"]
+    password = input_json["password"]
+    query_result = make_query(
+        TProfessional,
+        filters=and_(table.username == username, table.password == password),
+    ).first()
+    if query_result:
+        token = encode_auth_token(username, app.config.get("SECRET_KEY"))
+        result = jsonify({"token": token})
+        result.status_code = 200
+    else:
+        result = jsonify({})
+        # result.status_code = 401
+    return result

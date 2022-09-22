@@ -67,6 +67,7 @@ def many_to_many():
     Base.metadata.create_all(draft_engine)
     return Class, Student, session
 
+
 # test_many_to_many()
 
 
@@ -80,5 +81,6 @@ def drafts():
     candidate_sample = session.query(Candidate).filter().one()
     job_offer_sample = session.query(JobOffers).filter().one()
     print(job_offer_sample.candidate)
+
 
 drafts()
