@@ -1,8 +1,11 @@
+import base64
 import io
+import json
+
 import qrcode
 
 from methods.base import Methods
-from flask import request, jsonify, make_response
+from flask import request, jsonify
 
 import syntax
 from methods.common import (
@@ -86,17 +89,9 @@ class JobOffers(Methods):
         img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
         img_byte_arr = io.BytesIO()
         img.save(img_byte_arr, format='PNG')
-        img_byte_arr = img_byte_arr.getvalue()
-
-        response = make_response(img_byte_arr)
-        response.headers.set('Content-Type', 'image/png')
-        response.headers.set(
-            'Content-Disposition', 'attachment', filename=f"{new_job_offer_id}.png")
-        return response
-
-        # resp = jsonify({})
-        # resp.status_code = 200
-        # return resp
+        r_dict = {}
+        r_dict["img"] = base64.b64encode(img_byte_arr.getvalue()).decode('ascii')
+        return json.dumps(r_dict)
 
     def applied_job_offer(self):
         input_json = request.get_json(force=True)
