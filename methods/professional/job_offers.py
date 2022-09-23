@@ -1,5 +1,8 @@
+import io
+import qrcode
+
 from methods.base import Methods
-from flask import request, jsonify
+from flask import request, jsonify, make_response
 
 import syntax
 from methods.common import (
@@ -68,10 +71,32 @@ class JobOffers(Methods):
 
     def add_job_offer(self):
         input_json = request.get_json(force=True)
-        add_row(TJobOffers, input_json)
-        resp = jsonify({})
-        resp.status_code = 200
-        return resp
+        new_job_offer, session = add_row(TJobOffers, input_json, end_session=False)
+        new_job_offer_id = new_job_offer.id
+        session.close()
+
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_H,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(new_job_offer_id)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
+        img_byte_arr = io.BytesIO()
+        img.save(img_byte_arr, format='PNG')
+        img_byte_arr = img_byte_arr.getvalue()
+
+        response = make_response(img_byte_arr)
+        response.headers.set('Content-Type', 'image/png')
+        response.headers.set(
+            'Content-Disposition', 'attachment', filename=f"{new_job_offer_id}.png")
+        return response
+
+        # resp = jsonify({})
+        # resp.status_code = 200
+        # return resp
 
     def applied_job_offer(self):
         input_json = request.get_json(force=True)

@@ -10,11 +10,16 @@ def delete_row(handling_class, filters):
     session.close()
 
 
-def add_row(handling_class, content):
+def add_row(handling_class, content, end_session=True):
     session = sessionmaker(bind=MAIN_ENGINE)()
-    session.add(handling_class(**content))
+    instance = handling_class(**content)
+    session.add(instance)
     session.commit()
-    session.close()
+    if not end_session:
+        return instance, session
+    else:
+        session.close()
+        return instance
 
 
 def make_query(handling_class, filters=None, end_session=True, session=None):
