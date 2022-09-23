@@ -75,7 +75,7 @@ class JobOffers(Methods):
     def add_job_offer(self):
         input_json = request.get_json(force=True)
         new_job_offer, session = add_row(TJobOffers, input_json, end_session=False)
-        new_job_offer_id = new_job_offer.id
+        new_job_offer_id = str(new_job_offer.id)
         session.close()
 
         qr = qrcode.QRCode(
@@ -89,8 +89,10 @@ class JobOffers(Methods):
         img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
         img_byte_arr = io.BytesIO()
         img.save(img_byte_arr, format='PNG')
-        r_dict = {}
-        r_dict["img"] = base64.b64encode(img_byte_arr.getvalue()).decode('ascii')
+        r_dict = {
+            "img": base64.b64encode(img_byte_arr.getvalue()).decode('ascii'),
+            "id": new_job_offer_id
+        }
         return json.dumps(r_dict)
 
     def applied_job_offer(self):
