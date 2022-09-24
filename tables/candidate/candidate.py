@@ -1,10 +1,35 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Enum
 from sqlalchemy.orm import relationship
 
 from engine.base import Base
 
 from engine.engine import MAIN_ENGINE
 from tables.associations.associations import job_offer_candidate_association
+import enum
+
+
+candidate_syntax = {
+    "french": {
+        "sex": ["", "Homme", "Femme", "Non genré"],
+        "study_level": ["", "Licence", "Master"],
+    }
+}
+
+
+class Sex(enum.Enum):
+    null = 0
+    male = 1
+    female = 2
+    non_binary = 3
+
+
+class StudyLevel(enum.Enum):
+    null = 0
+    bachelor_degree = 1
+    master_degree = 2
+
+
+enums_to_module = {"sex": Sex, "study_level": StudyLevel}
 
 
 class Candidate(Base):
@@ -18,6 +43,11 @@ class Candidate(Base):
     country = Column(String)
     zone = Column(String)
     phone_number = Column(String)
+    study_level = Column(Enum(StudyLevel))
+    l_study_level = Column(String)
+    sex = Column(Enum(Sex))
+    l_sex = Column(String)
+    language = Column(String)
 
     job_offers = relationship(
         "JobOffers",
@@ -34,6 +64,11 @@ class Candidate(Base):
         country=None,
         zone=None,
         phone_number=None,
+        study_level=StudyLevel.null,
+        l_study_level="",
+        sex=Sex.null,
+        l_sex="",
+        language="french",
     ):
         self.firebase_id = firebase_id
         self.username = username
@@ -42,6 +77,14 @@ class Candidate(Base):
         self.country = country
         self.zone = zone
         self.phone_number = phone_number
+
+        self.study_level = study_level
+        self.l_study_level = l_study_level
+
+        self.sex = sex
+        self.l_sex = l_sex
+
+        self.language = language
 
 
 def create():

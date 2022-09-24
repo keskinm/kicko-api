@@ -86,12 +86,12 @@ class JobOffers(Methods):
         )
         qr.add_data(new_job_offer_id)
         qr.make(fit=True)
-        img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
+        img = qr.make_image(fill_color="black", back_color="white").convert("RGB")
         img_byte_arr = io.BytesIO()
-        img.save(img_byte_arr, format='PNG')
+        img.save(img_byte_arr, format="PNG")
         r_dict = {
-            "img": base64.b64encode(img_byte_arr.getvalue()).decode('ascii'),
-            "id": new_job_offer_id
+            "img": base64.b64encode(img_byte_arr.getvalue()).decode("ascii"),
+            "id": new_job_offer_id,
         }
         return json.dumps(r_dict)
 

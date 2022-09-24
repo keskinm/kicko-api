@@ -1,3 +1,5 @@
+import enum
+
 from sqlalchemy.orm import sessionmaker
 
 from engine.engine import MAIN_ENGINE
@@ -42,6 +44,8 @@ def row_to_dict(row):
         if v is not None:
             if column.name.endswith("id"):
                 v = str(v)
+            if isinstance(v, enum.Enum):
+                v = v.value
             d[column.name] = v
     return d
 
