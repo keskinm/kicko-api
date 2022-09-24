@@ -3,18 +3,11 @@ import io
 import json
 
 import qrcode
-
-from methods.base import Methods
-from flask import request, jsonify
+from flask import jsonify, request
 
 import syntax
-from methods.common import (
-    add_row,
-    delete_row,
-    make_query,
-    row_to_dict,
-    unique,
-)
+from methods.base import Methods
+from methods.common import add_row, delete_row, make_query, row_to_dict, unique
 from tables.candidate.candidate import Candidate
 from tables.professional.business import Business
 from tables.professional.job_offers import JobOffers as TJobOffers

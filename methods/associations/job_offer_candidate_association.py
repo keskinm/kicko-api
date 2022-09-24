@@ -1,9 +1,8 @@
+from flask import jsonify, request
+
 from methods.associations.base import Association
 from methods.base import Methods
-from flask import request, jsonify
-from methods.common import (
-    make_query,
-)
+from methods.common import make_query
 from tables.candidate.candidate import Candidate
 from tables.professional.job_offers import JobOffers
 

@@ -1,12 +1,11 @@
-from sqlalchemy import Column, Integer, String, Enum
+import enum
+
+from sqlalchemy import Column, Enum, Integer, String
 from sqlalchemy.orm import relationship
 
 from engine.base import Base
-
 from engine.engine import MAIN_ENGINE
 from tables.associations.associations import job_offer_candidate_association
-import enum
-
 
 candidate_syntax = {
     "french": {

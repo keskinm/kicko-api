@@ -1,11 +1,7 @@
-from methods.base import Methods
-from flask import request, jsonify
+from flask import jsonify, request
 
-from methods.common import (
-    make_query,
-    row_to_dict,
-    replace,
-)
+from methods.base import Methods
+from methods.common import make_query, replace, row_to_dict
 from tables.professional.business import Business as TBusiness
 
 

@@ -1,8 +1,7 @@
-from sqlalchemy import Table, Column, ForeignKey, Integer
+from sqlalchemy import Column, ForeignKey, Integer, Table
 
 from engine.base import Base
 from engine.engine import MAIN_ENGINE
-
 
 # @todo Gather all tables in one file.
 

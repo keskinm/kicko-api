@@ -1,7 +1,7 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, ForeignKey, Integer, String
+
 from engine.base import Base
 from engine.engine import MAIN_ENGINE
-
 from tables.professional.professional import Professional
 
 

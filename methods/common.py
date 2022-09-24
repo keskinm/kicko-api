@@ -84,10 +84,10 @@ def unique(handling_class, column_name, filters=None):
 #     return aggregated
 
 
-from sqlalchemy import and_
 from flask import jsonify, make_response
-from models import decode_auth_token
-from models import encode_auth_token
+from sqlalchemy import and_
+
+from models import decode_auth_token, encode_auth_token
 from tables.professional.professional import Professional as TProfessional
 
 
