@@ -131,5 +131,5 @@ def get_token(table, input_json, app):
         result.status_code = 200
     else:
         result = jsonify({})
-        # result.status_code = 401
+        result.status_code = 401
     return result
