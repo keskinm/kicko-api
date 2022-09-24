@@ -122,7 +122,7 @@ def get_token(table, input_json, app):
     username = input_json["username"]
     password = input_json["password"]
     query_result = make_query(
-        TProfessional,
+        table,
         filters=and_(table.username == username, table.password == password),
     ).first()
     if query_result:
