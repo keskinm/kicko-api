@@ -16,6 +16,8 @@ class Professional(Base):
     zone = Column(String)
     phone_number = Column(String)
 
+    language = Column(String)
+
     def __init__(
         self,
         firebase_id,
@@ -25,6 +27,7 @@ class Professional(Base):
         country=None,
         zone=None,
         phone_number=None,
+        language="french",
     ):
         self.firebase_id = firebase_id
         self.username = username
@@ -33,6 +36,8 @@ class Professional(Base):
         self.country = country
         self.zone = zone
         self.phone_number = phone_number
+
+        self.language = language
 
 
 def create():

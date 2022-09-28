@@ -1,3 +1,7 @@
+from tables.candidate.candidate import Candidate
+from tables.professional.professional import Professional
+
+
 class Methods:
     def __init__(self, app, url_rules=None, post_methods=None, get_methods=None):
         self.app = app
@@ -9,6 +13,9 @@ class Methods:
         self.add_get_rules(get_methods)
 
         self.add_url_rules()
+        self.table_routes = {
+            "user_group": {"candidate": Candidate, "professional": Professional}
+        }
 
     def add_post_rules(self, post_methods, prefix="api"):
         for post_method in post_methods:

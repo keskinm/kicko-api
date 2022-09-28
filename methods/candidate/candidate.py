@@ -14,6 +14,7 @@ class Candidate(Methods):
             self.candidate_register,
             self.candidate_get_profile,
             self.candidate_update_profile,
+            self.get_candidate_syntax
         ]
 
         get_methods = [self.candidate]
@@ -51,11 +52,28 @@ class Candidate(Methods):
         result.status_code = 200
         return result
 
+    def get_candidate_syntax(self):
+        input_json = request.get_json(force=True)
+        q_user_group = input_json["user_group"]
+        table = self.table_routes["user_group"][q_user_group]
+        id_attr = table.id
+        # id_attr = getattr(table, id)
+
+        user = row_to_dict(
+            make_query(table, id_attr == input_json["id"]).one()
+        )
+
+        result = jsonify(candidate_syntax[user["language"]])
+        result.status_code = 200
+        return result
+
     def candidate_get_profile(self):
         input_json = request.get_json(force=True)
         candidate = row_to_dict(
             make_query(TCandidate, TCandidate.id == input_json["id"]).one()
         )
+
+        #@todo delete syntax here and use get_candidate_syntax instead?
         result = jsonify(
             {"instance": candidate, "syntax": candidate_syntax[candidate["language"]]}
         )
