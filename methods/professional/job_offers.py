@@ -22,6 +22,7 @@ class JobOffers(Methods):
             self.add_job_offer,
             self.applied_job_offer,
             self.delete_job_offer,
+            self.professional_get_appliers,
         ]
         Methods.__init__(self, app=app, post_methods=post_rules)
 
@@ -87,6 +88,18 @@ class JobOffers(Methods):
             "id": new_job_offer_id,
         }
         return json.dumps(r_dict)
+
+    def professional_get_appliers(self):
+        input_json = request.get_json(force=True)
+        job_offer_query, session = make_query(
+            TJobOffers, TJobOffers.id == input_json["id"], end_session=False
+        )
+        job_offer = job_offer_query.one()
+        result = [row_to_dict(c) for c in job_offer.candidate]
+        session.close()
+        result = jsonify(result)
+        result.status_code = 200
+        return result
 
     def applied_job_offer(self):
         input_json = request.get_json(force=True)
