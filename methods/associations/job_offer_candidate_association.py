@@ -37,11 +37,14 @@ class JobOfferCandidate(Methods, Association):
 
     def professional_get_appliers(self):
         input_json = request.get_json(force=True)
+        professional_id = input_json.pop("professional_id")
         job_offer_query, session = make_query(
-            JobOffers, JobOffers.id == input_json["id"], end_session=False
+            JobOffers, JobOffers.id == professional_id, end_session=False
         )
         job_offer = job_offer_query.one()
         result = [row_to_dict(c) for c in job_offer.candidate]
+        match_filters = lambda c: all([c[k] == v for k, v in input_json.items()])
+        result = list(filter(match_filters, result))
         session.close()
         result = jsonify(result)
         result.status_code = 200
