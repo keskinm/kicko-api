@@ -48,6 +48,8 @@ class Candidate(Base):
     l_sex = Column(String)
     language = Column(String)
 
+    image_id = Column(String)
+
     job_offers = relationship(
         "JobOffers",
         secondary=job_offer_candidate_association,
@@ -68,6 +70,7 @@ class Candidate(Base):
         sex=Sex.null,
         l_sex="",
         language="french",
+        image_id=None,
     ):
         self.firebase_id = firebase_id
         self.username = username
@@ -84,6 +87,8 @@ class Candidate(Base):
         self.l_sex = l_sex
 
         self.language = language
+
+        self.image_id = image_id
 
 
 def create():
