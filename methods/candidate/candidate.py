@@ -2,7 +2,7 @@ from flask import jsonify, request
 
 from methods.base import Methods
 from methods.common import (add_row, get_token, get_user, make_query,
-                            row_to_dict)
+                            row_to_dict, delete_user)
 from tables.candidate.candidate import Candidate as TCandidate
 from tables.candidate.candidate import candidate_syntax, enums_to_module
 
@@ -17,7 +17,7 @@ class Candidate(Methods):
             self.get_candidate_syntax
         ]
 
-        get_methods = [self.candidate]
+        get_methods = [self.candidate, self.delete_candidate_account]
 
         Methods.__init__(
             self, app=app, post_methods=post_methods, get_methods=get_methods
@@ -83,6 +83,10 @@ class Candidate(Methods):
     def candidate(self):
         auth_header = request.headers.get("Authorization")
         return get_user(table=TCandidate, auth_header=auth_header, app=self.app)
+
+    def delete_candidate_account(self):
+        auth_header = request.headers.get("Authorization")
+        return delete_user(table=TCandidate, auth_header=auth_header, app=self.app)
 
     def candidate_authentication_token(self):
         input_json = request.get_json(force=True)

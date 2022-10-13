@@ -88,7 +88,32 @@ from flask import jsonify, make_response
 from sqlalchemy import and_
 
 from models import decode_auth_token, encode_auth_token
-from tables.professional.professional import Professional as TProfessional
+
+
+def delete_user(table, auth_header, app):
+    if auth_header:
+        print("AUTH TOKEN NON VIDE")
+        auth_token = auth_header.split(" ")[1]
+
+        succeed, resp = decode_auth_token(auth_token, app.config.get("SECRET_KEY"))
+        if succeed:
+            delete_row(
+                table,
+                [table.email == resp],
+            )
+            response_object = {"status": "success"}
+            return make_response(jsonify(response_object)), 200
+        response_object = {"status": "fail", "message": resp}
+        return make_response(jsonify(response_object)), 401
+
+    else:
+        # @todo Why a double call everytime with the first one here?
+        # Find why and then put fail and 401 response status
+        response_object = {
+            "status": "success",
+            "message": "Provide a valid auth token.",
+        }
+        return make_response(jsonify(response_object)), 200
 
 
 def get_user(table, auth_header, app):
