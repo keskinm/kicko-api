@@ -1,7 +1,6 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
 
 from engine.base import Base
-from engine.engine import MAIN_ENGINE
 from tables.professional.professional import Professional
 
 
@@ -34,7 +33,3 @@ class Business(Base):
         self.city = city
         self.phone_number = phone_number
         self.image_id = image_id
-
-
-def create():
-    Base.metadata.create_all(MAIN_ENGINE)

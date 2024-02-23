@@ -2,7 +2,6 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from engine.base import Base
-from engine.engine import MAIN_ENGINE
 from tables.associations.associations import job_offer_candidate_association
 from tables.professional.professional import Professional
 
@@ -29,9 +28,3 @@ class JobOffers(Base):
         self.description = description
         self.requires = requires
         self.business_id = business_id
-
-
-def create():
-    from tables.candidate.candidate import Candidate
-
-    Base.metadata.create_all(MAIN_ENGINE)

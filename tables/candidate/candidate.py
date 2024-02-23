@@ -4,7 +4,6 @@ from sqlalchemy import Column, Enum, Integer, String
 from sqlalchemy.orm import relationship
 
 from engine.base import Base
-from engine.engine import MAIN_ENGINE
 from tables.associations.associations import job_offer_candidate_association
 
 candidate_syntax = {
@@ -72,7 +71,7 @@ class Candidate(Base):
         l_sex="",
         language="french",
         image_id=None,
-        resume_id=None
+        resume_id=None,
     ):
         self.firebase_id = firebase_id
         self.username = username
@@ -92,7 +91,3 @@ class Candidate(Base):
 
         self.image_id = image_id
         self.resume_id = resume_id
-
-
-def create():
-    Base.metadata.create_all(MAIN_ENGINE)

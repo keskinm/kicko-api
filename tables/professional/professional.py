@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String
 
 from engine.base import Base
-from engine.engine import MAIN_ENGINE
 
 
 class Professional(Base):
@@ -38,7 +37,3 @@ class Professional(Base):
         self.phone_number = phone_number
 
         self.language = language
-
-
-def create():
-    Base.metadata.create_all(MAIN_ENGINE)

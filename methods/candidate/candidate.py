@@ -1,8 +1,14 @@
 from flask import jsonify, request
 
 from methods.base import Methods
-from methods.common import (add_row, get_token, get_user, make_query,
-                            row_to_dict, delete_user)
+from methods.common import (
+    add_row,
+    get_token,
+    get_user,
+    make_query,
+    row_to_dict,
+    delete_user,
+)
 from tables.candidate.candidate import Candidate as TCandidate
 from tables.candidate.candidate import candidate_syntax, enums_to_module
 
@@ -14,7 +20,7 @@ class Candidate(Methods):
             self.candidate_register,
             self.candidate_get_profile,
             self.candidate_update_profile,
-            self.get_candidate_syntax
+            self.get_candidate_syntax,
         ]
 
         get_methods = [self.candidate, self.delete_candidate_account]
@@ -59,9 +65,7 @@ class Candidate(Methods):
         id_attr = table.id
         # id_attr = getattr(table, id)
 
-        user = row_to_dict(
-            make_query(table, id_attr == input_json["id"]).one()
-        )
+        user = row_to_dict(make_query(table, id_attr == input_json["id"]).one())
 
         result = jsonify(candidate_syntax[user["language"]])
         result.status_code = 200
@@ -73,7 +77,7 @@ class Candidate(Methods):
             make_query(TCandidate, TCandidate.id == input_json["id"]).one()
         )
 
-        #@todo delete syntax here and use get_candidate_syntax instead?
+        # @todo delete syntax here and use get_candidate_syntax instead?
         result = jsonify(
             {"instance": candidate, "syntax": candidate_syntax[candidate["language"]]}
         )
