@@ -123,7 +123,7 @@ def get_user(table, auth_header, app):
 
         succeed, resp = decode_auth_token(auth_token, app.config.get("SECRET_KEY"))
         if succeed:
-            user = make_query(table, filters=table.email == resp).first()
+            user = make_query(table, filters=table.username == resp).first()
             response_object = {
                 "status": "success",
                 "data": {
