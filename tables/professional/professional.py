@@ -8,7 +8,7 @@ class Professional(Base):
 
     id = Column(Integer, primary_key=True, unique=True)
     firebase_id = Column(String, unique=True)
-    username = Column(String)
+    username = Column(String, unique=True)
     password = Column(String)
     email = Column(String(100), unique=True)
     country = Column(String)
