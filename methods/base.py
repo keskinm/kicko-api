@@ -1,10 +1,10 @@
 from tables.candidate.candidate import Candidate
 from tables.professional.professional import Professional
+from app import app
 
 
 class Methods:
-    def __init__(self, app, url_rules=None, post_methods=None, get_methods=None):
-        self.app = app
+    def __init__(self, url_rules=None, post_methods=None, get_methods=None):
         self.url_rules = url_rules or {}
 
         post_methods = post_methods or []
@@ -41,4 +41,4 @@ class Methods:
 
     def add_url_rules(self):
         for url, _d in self.url_rules.items():
-            self.app.add_url_rule(url, view_func=_d["view_func"], methods=_d["methods"])
+            app.add_url_rule(url, view_func=_d["view_func"], methods=_d["methods"])

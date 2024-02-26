@@ -11,23 +11,21 @@ from methods.common import (
 )
 from tables.candidate.candidate import Candidate as TCandidate
 from tables.candidate.candidate import candidate_syntax, enums_to_module
+from app import app
 
 
 class Candidate(Methods):
-    def __init__(self, app):
+    def __init__(self):
         post_methods = [
             self.candidate_authentication_token,
             self.candidate_register,
-            self.candidate_get_profile,
             self.candidate_update_profile,
             self.get_candidate_syntax,
         ]
 
         get_methods = [self.candidate, self.delete_candidate_account]
 
-        Methods.__init__(
-            self, app=app, post_methods=post_methods, get_methods=get_methods
-        )
+        Methods.__init__(self, post_methods=post_methods, get_methods=get_methods)
         self.enums_set_attr = {
             "sex": self.set_attr_enum,
             "study_level": self.set_attr_enum,
@@ -71,10 +69,11 @@ class Candidate(Methods):
         result.status_code = 200
         return result
 
-    def candidate_get_profile(self):
-        input_json = request.get_json(force=True)
+    @staticmethod
+    @app.route('/api/candidate_get_profile/<candidate_id>', methods=['GET'])
+    def candidate_get_profile(candidate_id):
         candidate = row_to_dict(
-            make_query(TCandidate, TCandidate.id == input_json["id"]).one()
+            make_query(TCandidate, TCandidate.id == candidate_id).one()
         )
 
         # @todo delete syntax here and use get_candidate_syntax instead?
@@ -86,15 +85,15 @@ class Candidate(Methods):
 
     def candidate(self):
         auth_header = request.headers.get("Authorization")
-        return get_user(table=TCandidate, auth_header=auth_header, app=self.app)
+        return get_user(table=TCandidate, auth_header=auth_header)
 
     def delete_candidate_account(self):
         auth_header = request.headers.get("Authorization")
-        return delete_user(table=TCandidate, auth_header=auth_header, app=self.app)
+        return delete_user(table=TCandidate, auth_header=auth_header)
 
     def candidate_authentication_token(self):
         input_json = request.get_json(force=True)
-        return get_token(table=TCandidate, input_json=input_json, app=self.app)
+        return get_token(table=TCandidate, input_json=input_json)
 
     def candidate_register(self):
         input_json = request.get_json(force=True)

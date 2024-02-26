@@ -13,7 +13,7 @@ from tables.professional.job_offers import JobOffers as TJobOffers
 
 
 class JobOffers(Methods):
-    def __init__(self, app):
+    def __init__(self):
         post_rules = [
             self.professional_get_job_offers,
             self.candidate_get_job_offer,
@@ -21,7 +21,7 @@ class JobOffers(Methods):
             self.add_job_offer,
             self.delete_job_offer,
         ]
-        Methods.__init__(self, app=app, post_methods=post_rules)
+        Methods.__init__(self, post_methods=post_rules)
 
     def professional_get_job_offers(self):
         input_json = request.get_json(force=True)

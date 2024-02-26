@@ -3,7 +3,7 @@ import enum
 from sqlalchemy.orm import sessionmaker
 
 from engine.engine import MAIN_ENGINE
-
+from app import app
 
 def delete_row(handling_class, filters):
     session = sessionmaker(bind=MAIN_ENGINE)()
@@ -90,7 +90,7 @@ from sqlalchemy import and_
 from models import decode_auth_token, encode_auth_token
 
 
-def delete_user(table, auth_header, app):
+def delete_user(table, auth_header):
     if auth_header:
         print("AUTH TOKEN NON VIDE")
         auth_token = auth_header.split(" ")[1]
@@ -116,7 +116,7 @@ def delete_user(table, auth_header, app):
         return make_response(jsonify(response_object)), 200
 
 
-def get_user(table, auth_header, app):
+def get_user(table, auth_header):
     if auth_header:
         print("AUTH TOKEN NON VIDE")
         auth_token = auth_header.split(" ")[1]
@@ -147,7 +147,7 @@ def get_user(table, auth_header, app):
         return make_response(jsonify(response_object)), 200
 
 
-def get_token(table, input_json, app):
+def get_token(table, input_json):
     username = input_json["username"]
     password = input_json["password"]
     query_result = make_query(

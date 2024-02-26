@@ -6,9 +6,9 @@ from tables.professional.business import Business as TBusiness
 
 
 class Business(Methods):
-    def __init__(self, app):
+    def __init__(self):
         post_rules = [self.get_business, self.update_business_fields]
-        Methods.__init__(self, app=app, post_methods=post_rules)
+        Methods.__init__(self, post_methods=post_rules)
 
     def get_business(self):
         input_json = request.get_json(force=True)

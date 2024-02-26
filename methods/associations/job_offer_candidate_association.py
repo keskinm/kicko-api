@@ -8,13 +8,13 @@ from tables.professional.job_offers import JobOffers
 
 
 class JobOfferCandidate(Methods, Association):
-    def __init__(self, app):
+    def __init__(self):
         post_rules = [
             self.applied_job_offer,
             self.apply_job_offer,
             self.professional_get_appliers,
         ]
-        Methods.__init__(self, app=app, post_methods=post_rules)
+        Methods.__init__(self, post_methods=post_rules)
 
     def applied_job_offer(self):
         input_json = request.get_json(force=True)
