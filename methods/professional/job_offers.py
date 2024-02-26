@@ -10,13 +10,13 @@ from methods.base import Methods
 from methods.common import add_row, delete_row, make_query, row_to_dict, unique
 from tables.professional.business import Business
 from tables.professional.job_offers import JobOffers as TJobOffers
+from app import app
 
 
 class JobOffers(Methods):
     def __init__(self):
         post_rules = [
             self.professional_get_job_offers,
-            self.candidate_get_job_offer,
             self.candidate_get_job_offers,
             self.add_job_offer,
             self.delete_job_offer,
@@ -35,9 +35,10 @@ class JobOffers(Methods):
         result.status_code = 200
         return result
 
-    def candidate_get_job_offer(self):
-        input_json = request.get_json(force=True)
-        result = make_query(TJobOffers, TJobOffers.id == input_json["id"]).one()
+    @staticmethod
+    @app.route("/api/candidate_get_job_offer/<job_offer_id>")
+    def candidate_get_job_offer(job_offer_id):
+        result = make_query(TJobOffers, TJobOffers.id == job_offer_id).one()
         result = jsonify(row_to_dict(result))
         result.status_code = 200
         return result
