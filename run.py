@@ -13,12 +13,9 @@ from flask_cors import CORS
 app.secret_key = os.urandom(12)
 
 
-JobOfferCandidate(), JobOffers(), Business(), Professional()
+for _class in [Candidate, Professional, Business, JobOffers, JobOfferCandidate]:
+    register_instance_methods(app, _class())
 
-candidate = Candidate()
-
-
-register_instance_methods(app, candidate)
 CORS(app)
 
 

@@ -36,7 +36,7 @@ class JobOffers(Methods):
         return result
 
     @staticmethod
-    @app.route("/api/candidate_get_job_offer/<job_offer_id>")
+    @app.route("/api/candidate_get_job_offer/<job_offer_id>", methods=["GET"])
     def candidate_get_job_offer(job_offer_id):
         result = make_query(TJobOffers, TJobOffers.id == job_offer_id).one()
         result = jsonify(row_to_dict(result))
