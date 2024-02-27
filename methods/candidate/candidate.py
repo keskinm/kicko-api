@@ -19,7 +19,6 @@ class Candidate(Methods):
         post_methods = [
             self.candidate_authentication_token,
             self.candidate_register,
-            self.candidate_update_profile,
             self.get_candidate_syntax,
         ]
 
@@ -45,14 +44,13 @@ class Candidate(Methods):
         session.commit()
         session.close()
 
-    def candidate_update_profile(self):
+    def candidate_update_profile(self, candidate_id):
         input_json = request.get_json(force=True)
-        candidate_id = input_json.pop("id")
         query, session = make_query(
             TCandidate, TCandidate.id == candidate_id, end_session=False
         )
         self.replace(session, query.first(), input_json)
-        result = jsonify({})
+        result = jsonify({"success": True})
         result.status_code = 200
         return result
 
@@ -70,7 +68,7 @@ class Candidate(Methods):
         return result
 
     @staticmethod
-    @app.route('/api/candidate_get_profile/<candidate_id>', methods=['GET'])
+    @app.route("/api/candidate_get_profile/<candidate_id>", methods=["GET"])
     def candidate_get_profile(candidate_id):
         candidate = row_to_dict(
             make_query(TCandidate, TCandidate.id == candidate_id).one()

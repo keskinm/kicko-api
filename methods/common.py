@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from engine.engine import MAIN_ENGINE
 from app import app
 
+
 def delete_row(handling_class, filters):
     session = sessionmaker(bind=MAIN_ENGINE)()
     session.query(handling_class).filter(*filters).delete()
