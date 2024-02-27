@@ -1,8 +1,8 @@
+from functools import partial, wraps
+
+from app import app
 from tables.candidate.candidate import Candidate
 from tables.professional.professional import Professional
-from app import app
-
-from functools import partial, wraps
 
 
 def register_instance_methods(app, instance):

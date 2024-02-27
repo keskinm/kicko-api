@@ -2,8 +2,8 @@ import enum
 
 from sqlalchemy.orm import sessionmaker
 
-from engine.engine import MAIN_ENGINE
 from app import app
+from engine.engine import MAIN_ENGINE
 
 
 def delete_row(handling_class, filters):

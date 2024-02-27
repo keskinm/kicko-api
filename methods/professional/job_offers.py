@@ -6,11 +6,11 @@ import qrcode
 from flask import jsonify, request
 
 import syntax
+from app import app
 from methods.base import Methods
 from methods.common import add_row, delete_row, make_query, row_to_dict, unique
 from tables.professional.business import Business
 from tables.professional.job_offers import JobOffers as TJobOffers
-from app import app
 
 
 class JobOffers(Methods):

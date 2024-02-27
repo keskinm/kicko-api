@@ -1,17 +1,11 @@
 from flask import jsonify, request
 
+from app import app
 from methods.base import Methods, instance_method_route
-from methods.common import (
-    add_row,
-    get_token,
-    get_user,
-    make_query,
-    row_to_dict,
-    delete_user,
-)
+from methods.common import (add_row, delete_user, get_token, get_user,
+                            make_query, row_to_dict)
 from tables.candidate.candidate import Candidate as TCandidate
 from tables.candidate.candidate import candidate_syntax, enums_to_module
-from app import app
 
 
 class Candidate(Methods):
