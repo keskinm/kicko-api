@@ -1,6 +1,6 @@
 from flask import jsonify, request
 
-from methods.base import Methods
+from methods.base import Methods, to_register
 from methods.common import (
     add_row,
     get_token,
@@ -44,6 +44,7 @@ class Candidate(Methods):
         session.commit()
         session.close()
 
+    @to_register
     def candidate_update_profile(self, candidate_id):
         input_json = request.get_json(force=True)
         query, session = make_query(

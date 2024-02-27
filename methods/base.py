@@ -2,6 +2,14 @@ from tables.candidate.candidate import Candidate
 from tables.professional.professional import Professional
 from app import app
 
+to_register_methods = []
+
+
+def to_register(method):
+    """Decorator for methods that has to be registered manually."""
+    to_register_methods.append(method)
+    return method
+
 
 class Methods:
     def __init__(self, url_rules=None, post_methods=None, get_methods=None):
