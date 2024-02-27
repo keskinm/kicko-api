@@ -1,1 +1,1 @@
-from .base import to_register
+from .base import instance_method_route
