@@ -46,7 +46,8 @@ class JobOffers(Methods):
     def candidate_get_job_offers(self):
         input_json = request.get_json(force=True)
         filters = []
-        if "city" in input_json and input_json["city"] != syntax.all_cities:
+        city = input_json.get("city", None)
+        if city is not None and city != syntax.all_cities:
             legit_business = make_query(Business, Business.city == input_json["city"])
             legit_business = [row_to_dict(o) for o in legit_business]
             legit_business = list(map(lambda d: d["id"], legit_business))
