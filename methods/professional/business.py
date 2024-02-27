@@ -3,16 +3,16 @@ from flask import jsonify, request
 from methods.base import Methods
 from methods.common import make_query, replace, row_to_dict
 from tables.professional.business import Business as TBusiness
-
+from app import app
 
 class Business(Methods):
     def __init__(self):
         post_rules = [self.get_business, self.update_business_fields]
         Methods.__init__(self, post_methods=post_rules)
 
-    def get_business(self):
-        input_json = request.get_json(force=True)
-        professional_id = input_json["professional_id"]
+    @staticmethod
+    @app.route("/api/get_business/<professional_id>", methods=["GET"])
+    def get_business(professional_id):
         result = row_to_dict(
             make_query(TBusiness, TBusiness.professional_id == professional_id).first()
         )
