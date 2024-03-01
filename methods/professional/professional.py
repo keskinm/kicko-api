@@ -5,6 +5,7 @@ from methods.common import (add_row, delete_user, get_token, get_user,
                             make_query, row_to_dict)
 from tables.professional.business import Business as TBusiness
 from tables.professional.professional import Professional as TProfessional
+from app import app
 
 
 class Professional(Methods):
@@ -14,15 +15,17 @@ class Professional(Methods):
             self.professional_register,
         ]
 
-        get_methods = [self.professional, self.delete_professional_account]
+        Methods.__init__(self, post_methods=post_methods)
 
-        Methods.__init__(self, post_methods=post_methods, get_methods=get_methods)
-
-    def professional(self):
+    @staticmethod
+    @app.route("/api/professional", methods=["GET"])
+    def professional():
         auth_header = request.headers.get("Authorization")
         return get_user(table=TProfessional, auth_header=auth_header)
 
-    def delete_professional_account(self):
+    @staticmethod
+    @app.route("/api/delete_professional_account", methods=["GET"])
+    def delete_professional_account():
         auth_header = request.headers.get("Authorization")
         return delete_user(table=TProfessional, auth_header=auth_header)
 

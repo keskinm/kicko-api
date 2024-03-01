@@ -16,19 +16,17 @@ from tables.professional.job_offers import JobOffers as TJobOffers
 class JobOffers(Methods):
     def __init__(self):
         post_rules = [
-            self.professional_get_job_offers,
             self.candidate_get_job_offers,
             self.add_job_offer,
-            self.delete_job_offer,
         ]
         Methods.__init__(self, post_methods=post_rules)
 
-    def professional_get_job_offers(self):
-        input_json = request.get_json(force=True)
+    @staticmethod
+    @app.route("/api/professional_get_job_offers/<pro_id>", methods=["GET"])
+    def professional_get_job_offers(pro_id):
         legit_business = unique(
-            Business, "id", Business.professional_id == input_json["professional_id"]
+            Business, "id", Business.professional_id == pro_id
         )
-
         result = make_query(TJobOffers, TJobOffers.business_id.in_(legit_business))
         result = [row_to_dict(o) for o in result]
         result = jsonify(list(result))
@@ -88,18 +86,17 @@ class JobOffers(Methods):
         }
         return json.dumps(r_dict)
 
-    def delete_job_offer(self):
-        input_json = request.get_json(force=True)
-
+    @staticmethod
+    @app.route("/api/delete_job_offer/<pro_id>/<job_offer_id>", methods=["GET"])
+    def delete_job_offer(pro_id, job_offer_id):
         legit_business = unique(
-            Business, "id", Business.professional_id == input_json["professional_id"]
+            Business, "id", Business.professional_id == pro_id
         )
 
-        job_offer_id = input_json["id"]
         delete_row(
             TJobOffers,
             [TJobOffers.business_id.in_(legit_business), TJobOffers.id == job_offer_id],
         )
-        resp = jsonify({})
+        resp = jsonify({"success": True})
         resp.status_code = 200
         return resp

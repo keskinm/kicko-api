@@ -12,7 +12,6 @@ class JobOfferCandidate(Methods, Association):
     def __init__(self):
         post_rules = [
             self.apply_job_offer,
-            self.professional_get_appliers,
         ]
         Methods.__init__(self, post_methods=post_rules)
 
@@ -37,11 +36,12 @@ class JobOfferCandidate(Methods, Association):
         result.status_code = 200
         return result
 
-    def professional_get_appliers(self):
+    @staticmethod
+    @app.route("/api/professional_get_appliers/<job_offer_id>", methods=["POST"])
+    def professional_get_appliers(job_offer_id):
         input_json = request.get_json(force=True)
-        professional_id = input_json.pop("professional_id")
         job_offer_query, session = make_query(
-            JobOffers, JobOffers.id == professional_id, end_session=False
+            JobOffers, JobOffers.id == job_offer_id, end_session=False
         )
         job_offer = job_offer_query.one()
         result = [row_to_dict(c) for c in job_offer.candidate]

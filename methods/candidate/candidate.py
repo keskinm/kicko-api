@@ -13,12 +13,9 @@ class Candidate(Methods):
         post_methods = [
             self.candidate_authentication_token,
             self.candidate_register,
-            self.get_candidate_syntax,
         ]
 
-        get_methods = [self.candidate, self.delete_candidate_account]
-
-        Methods.__init__(self, post_methods=post_methods, get_methods=get_methods)
+        Methods.__init__(self, post_methods=post_methods)
         self.enums_set_attr = {
             "sex": self.set_attr_enum,
             "study_level": self.set_attr_enum,
@@ -49,17 +46,19 @@ class Candidate(Methods):
         result.status_code = 200
         return result
 
-    def get_candidate_syntax(self):
+    @instance_method_route("get_candidate_syntax/<user_id>", methods=["POST"])
+    def get_candidate_syntax(self, user_id):
         input_json = request.get_json(force=True)
         q_user_group = input_json["user_group"]
         table = self.table_routes["user_group"][q_user_group]
         id_attr = table.id
         # id_attr = getattr(table, id)
 
-        user = row_to_dict(make_query(table, id_attr == input_json["id"]).one())
+        user = row_to_dict(make_query(table, id_attr == user_id).one())
 
         result = jsonify(candidate_syntax[user["language"]])
         result.status_code = 200
+        print("result ici", candidate_syntax[user["language"]])
         return result
 
     @staticmethod
@@ -76,11 +75,15 @@ class Candidate(Methods):
         result.status_code = 200
         return result
 
-    def candidate(self):
+    @staticmethod
+    @app.route("/api/candidate", methods=["GET"])
+    def candidate():
         auth_header = request.headers.get("Authorization")
         return get_user(table=TCandidate, auth_header=auth_header)
 
-    def delete_candidate_account(self):
+    @staticmethod
+    @app.route("/api/delete_candidate_account", methods=["GET"])
+    def delete_candidate_account():
         auth_header = request.headers.get("Authorization")
         return delete_user(table=TCandidate, auth_header=auth_header)
 
