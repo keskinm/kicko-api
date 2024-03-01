@@ -6,9 +6,6 @@ from tables.professional.business import Business as TBusiness
 from app import app
 
 class Business(Methods):
-    def __init__(self):
-        post_rules = [self.get_business, self.update_business_fields]
-        Methods.__init__(self, post_methods=post_rules)
 
     @staticmethod
     @app.route("/api/get_business/<professional_id>", methods=["GET"])
@@ -20,13 +17,14 @@ class Business(Methods):
         result.status_code = 200
         return result
 
-    def update_business_fields(self):
+    @staticmethod
+    @app.route("/api/update_business_fields/<professional_id>", methods=["POST"])
+    def update_business_fields(professional_id):
         input_json = request.get_json(force=True)
-        professional_id = input_json.pop("professional_id")
         query, session = make_query(
             TBusiness, TBusiness.professional_id == professional_id, end_session=False
         )
         replace(session, query.first(), input_json)
-        result = jsonify({})
+        result = jsonify({"success": True})
         result.status_code = 200
         return result
