@@ -10,11 +10,7 @@ from tables.candidate.candidate import candidate_syntax, enums_to_module
 
 class Candidate(Methods):
     def __init__(self):
-        post_methods = [
-            self.candidate_authentication_token,
-        ]
-
-        Methods.__init__(self, post_methods=post_methods)
+        super().__init__()
         self.enums_set_attr = {
             "sex": self.set_attr_enum,
             "study_level": self.set_attr_enum,
@@ -86,7 +82,9 @@ class Candidate(Methods):
         auth_header = request.headers.get("Authorization")
         return delete_user(table=TCandidate, auth_header=auth_header)
 
-    def candidate_authentication_token(self):
+    @staticmethod
+    @app.route("/api/candidate_authentication_token", methods=["POST"])
+    def candidate_authentication_token():
         input_json = request.get_json(force=True)
         return get_token(table=TCandidate, input_json=input_json)
 

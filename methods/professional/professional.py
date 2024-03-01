@@ -9,13 +9,6 @@ from app import app
 
 
 class Professional(Methods):
-    def __init__(self):
-        post_methods = [
-            self.professional_authentication_token,
-        ]
-
-        Methods.__init__(self, post_methods=post_methods)
-
     @staticmethod
     @app.route("/api/professional", methods=["GET"])
     def professional():
@@ -28,7 +21,9 @@ class Professional(Methods):
         auth_header = request.headers.get("Authorization")
         return delete_user(table=TProfessional, auth_header=auth_header)
 
-    def professional_authentication_token(self):
+    @staticmethod
+    @app.route("/api/professional_authentication_token", methods=["POST"])
+    def professional_authentication_token():
         input_json = request.get_json(force=True)
         return get_token(table=TProfessional, input_json=input_json)
 
