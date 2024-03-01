@@ -12,7 +12,6 @@ class Candidate(Methods):
     def __init__(self):
         post_methods = [
             self.candidate_authentication_token,
-            self.candidate_register,
         ]
 
         Methods.__init__(self, post_methods=post_methods)
@@ -91,7 +90,9 @@ class Candidate(Methods):
         input_json = request.get_json(force=True)
         return get_token(table=TCandidate, input_json=input_json)
 
-    def candidate_register(self):
+    @staticmethod
+    @app.route("/api/candidate_register", methods=["POST"])
+    def candidate_register():
         input_json = request.get_json(force=True)
         add_row(TCandidate, input_json)
         resp = jsonify({})

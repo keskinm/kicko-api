@@ -12,7 +12,6 @@ class Professional(Methods):
     def __init__(self):
         post_methods = [
             self.professional_authentication_token,
-            self.professional_register,
         ]
 
         Methods.__init__(self, post_methods=post_methods)
@@ -33,7 +32,9 @@ class Professional(Methods):
         input_json = request.get_json(force=True)
         return get_token(table=TProfessional, input_json=input_json)
 
-    def professional_register(self):
+    @staticmethod
+    @app.route("/api/professional_register", methods=["POST"])
+    def professional_register():
         input_json = request.get_json(force=True)
         add_row(TProfessional, input_json)
         professional_id = row_to_dict(
