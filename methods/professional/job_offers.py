@@ -17,7 +17,6 @@ class JobOffers(Methods):
     def __init__(self):
         post_rules = [
             self.candidate_get_job_offers,
-            self.add_job_offer,
         ]
         Methods.__init__(self, post_methods=post_rules)
 
@@ -63,7 +62,9 @@ class JobOffers(Methods):
         result.status_code = 200
         return result
 
-    def add_job_offer(self):
+    @staticmethod
+    @app.route("/api/add_job_offer", methods=["POST"])
+    def add_job_offer():
         input_json = request.get_json(force=True)
         new_job_offer, session = add_row(TJobOffers, input_json, end_session=False)
         new_job_offer_id = str(new_job_offer.id)
