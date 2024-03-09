@@ -26,7 +26,6 @@ class Professional(Base):
         country=None,
         zone=None,
         phone_number=None,
-        language="french",
     ):
         self.firebase_id = firebase_id
         self.username = username
@@ -35,5 +34,3 @@ class Professional(Base):
         self.country = country
         self.zone = zone
         self.phone_number = phone_number
-
-        self.language = language

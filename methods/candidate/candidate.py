@@ -2,10 +2,16 @@ from flask import jsonify, request
 
 from app import app
 from methods.base import Methods, instance_method_route
-from methods.common import (add_row, delete_user, get_token, get_user,
-                            make_query, row_to_dict)
+from methods.common import (
+    add_row,
+    delete_user,
+    get_token,
+    get_user,
+    make_query,
+    row_to_dict,
+)
 from tables.candidate.candidate import Candidate as TCandidate
-from tables.candidate.candidate import candidate_syntax, enums_to_module
+from tables.candidate.candidate import enums_to_module, enums_values
 
 
 class Candidate(Methods):
@@ -44,16 +50,8 @@ class Candidate(Methods):
     @instance_method_route("get_candidate_syntax/<user_id>", methods=["POST"])
     def get_candidate_syntax(self, user_id):
         input_json = request.get_json(force=True)
-        q_user_group = input_json["user_group"]
-        table = self.table_routes["user_group"][q_user_group]
-        id_attr = table.id
-        # id_attr = getattr(table, id)
-
-        user = row_to_dict(make_query(table, id_attr == user_id).one())
-
-        result = jsonify(candidate_syntax[user["language"]])
+        result = jsonify(enums_values)
         result.status_code = 200
-        print("result ici", candidate_syntax[user["language"]])
         return result
 
     @staticmethod
@@ -62,11 +60,7 @@ class Candidate(Methods):
         candidate = row_to_dict(
             make_query(TCandidate, TCandidate.id == candidate_id).one()
         )
-
-        # @todo delete syntax here and use get_candidate_syntax instead?
-        result = jsonify(
-            {"instance": candidate, "syntax": candidate_syntax[candidate["language"]]}
-        )
+        result = jsonify({"instance": candidate, "syntax": enums_values})
         result.status_code = 200
         return result
 

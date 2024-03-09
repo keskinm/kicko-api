@@ -5,8 +5,8 @@ from methods.common import make_query, replace, row_to_dict
 from tables.professional.business import Business as TBusiness
 from app import app
 
-class Business(Methods):
 
+class Business(Methods):
     @staticmethod
     @app.route("/api/get_business/<professional_id>", methods=["GET"])
     def get_business(professional_id):

@@ -1,8 +1,14 @@
 from flask import jsonify, request
 
 from methods.base import Methods
-from methods.common import (add_row, delete_user, get_token, get_user,
-                            make_query, row_to_dict)
+from methods.common import (
+    add_row,
+    delete_user,
+    get_token,
+    get_user,
+    make_query,
+    row_to_dict,
+)
 from tables.professional.business import Business as TBusiness
 from tables.professional.professional import Professional as TProfessional
 from app import app

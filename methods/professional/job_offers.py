@@ -23,9 +23,7 @@ class JobOffers(Methods):
     @staticmethod
     @app.route("/api/professional_get_job_offers/<pro_id>", methods=["GET"])
     def professional_get_job_offers(pro_id):
-        legit_business = unique(
-            Business, "id", Business.professional_id == pro_id
-        )
+        legit_business = unique(Business, "id", Business.professional_id == pro_id)
         result = make_query(TJobOffers, TJobOffers.business_id.in_(legit_business))
         result = [row_to_dict(o) for o in result]
         result = jsonify(list(result))
@@ -90,9 +88,7 @@ class JobOffers(Methods):
     @staticmethod
     @app.route("/api/delete_job_offer/<pro_id>/<job_offer_id>", methods=["GET"])
     def delete_job_offer(pro_id, job_offer_id):
-        legit_business = unique(
-            Business, "id", Business.professional_id == pro_id
-        )
+        legit_business = unique(Business, "id", Business.professional_id == pro_id)
 
         delete_row(
             TJobOffers,

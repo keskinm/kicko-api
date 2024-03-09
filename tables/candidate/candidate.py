@@ -6,28 +6,22 @@ from sqlalchemy.orm import relationship
 from engine.base import Base
 from tables.associations.associations import job_offer_candidate_association
 
-candidate_syntax = {
-    "french": {
-        "sex": ["", "Homme", "Femme", "Non genré"],
-        "study_level": ["", "Licence", "Master"],
-    }
-}
-
 
 class Sex(enum.Enum):
-    null = 0
-    male = 1
-    female = 2
-    non_binary = 3
+    null = ""
+    male = "Homme"
+    female = "Femme"
+    non_binary = "Non genré"
 
 
 class StudyLevel(enum.Enum):
-    null = 0
-    bachelor_degree = 1
-    master_degree = 2
+    null = ""
+    bachelor_degree = "Licence"
+    master_degree = "Master"
 
 
 enums_to_module = {"sex": Sex, "study_level": StudyLevel}
+enums_values = {k: [v.value for v in module] for k, module in enums_to_module.items()}
 
 
 class Candidate(Base):
@@ -42,10 +36,7 @@ class Candidate(Base):
     zone = Column(String)
     phone_number = Column(String)
     study_level = Column(Enum(StudyLevel))
-    l_study_level = Column(String)
     sex = Column(Enum(Sex))
-    l_sex = Column(String)
-    language = Column(String)
 
     image_id = Column(String)
     resume_id = Column(String)
@@ -66,10 +57,7 @@ class Candidate(Base):
         zone=None,
         phone_number=None,
         study_level=StudyLevel.null,
-        l_study_level="",
         sex=Sex.null,
-        l_sex="",
-        language="french",
         image_id=None,
         resume_id=None,
     ):
@@ -82,12 +70,7 @@ class Candidate(Base):
         self.phone_number = phone_number
 
         self.study_level = study_level
-        self.l_study_level = l_study_level
-
         self.sex = sex
-        self.l_sex = l_sex
-
-        self.language = language
 
         self.image_id = image_id
         self.resume_id = resume_id
