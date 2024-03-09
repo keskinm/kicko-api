@@ -60,7 +60,7 @@ class Candidate(Methods):
         candidate = row_to_dict(
             make_query(TCandidate, TCandidate.id == candidate_id).one()
         )
-        result = jsonify({"instance": candidate, "syntax": enums_values})
+        result = jsonify(candidate)
         result.status_code = 200
         return result
 
