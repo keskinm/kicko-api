@@ -47,9 +47,9 @@ class Candidate(Methods):
         result.status_code = 200
         return result
 
-    @instance_method_route("get_candidate_syntax/<user_id>", methods=["POST"])
-    def get_candidate_syntax(self, user_id):
-        input_json = request.get_json(force=True)
+    @staticmethod
+    @app.route("/api/get_candidate_syntax", methods=["GET"])
+    def get_candidate_syntax():
         result = jsonify(enums_values)
         result.status_code = 200
         return result
