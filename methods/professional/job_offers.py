@@ -4,10 +4,11 @@ import json
 from io import BytesIO
 
 import qrcode
-from firebase_admin import (credentials, exceptions, get_app, initialize_app,
-                            storage)
+from firebase_admin import credentials, exceptions, get_app, initialize_app, storage
 from flask import jsonify, request
 from PIL import Image
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
 import syntax
 from app import app
@@ -25,17 +26,17 @@ class JobOffers(Methods):
         Methods.__init__(self, post_methods=post_rules)
 
     @staticmethod
-    @app.route("/api/professional_get_job_offer/<pro_username>/<job_id>", methods=["GET"])
+    @app.route(
+        "/api/professional_get_job_offer/<pro_username>/<job_id>", methods=["GET"]
+    )
     def professional_get_job_offer(pro_username, job_id):
         try:
-            firebase_app = get_app()
+            _ = get_app()
         except ValueError:
             cred = credentials.Certificate("kicko-b75db-ece1605913a6.json")
-            firebase_app = initialize_app(
-                cred, {"storageBucket": "kicko-b75db.appspot.com"}
-            )
+            _ = initialize_app(cred, {"storageBucket": "kicko-b75db.appspot.com"})
         bucket = storage.bucket()
-        blob = bucket.blob(f'professional/{pro_username}/job_offer_qr_codes/{job_id}')
+        blob = bucket.blob(f"professional/{pro_username}/job_offer_qr_codes/{job_id}")
         byte_stream = BytesIO()
         blob.download_to_file(byte_stream)
         byte_stream.seek(0)
@@ -44,17 +45,27 @@ class JobOffers(Methods):
         result.status_code = 200
         return result
 
-        canvas = Canvas("font-colors.pdf", pagesize=LETTER)
-        canvas.setFont("Times-Roman", 12)
-        canvas.setFillColor(blue)
-        canvas.drawString(1 * inch, 10 * inch, "Blue text")
-        canvas.save()
-        # ---------------------------------------------
-        r_dict = {
-            "img": base64.b64encode(img_byte_arr.getvalue()).decode("ascii"),
-            "id": new_job_offer_id,
-        }
-        return json.dumps(r_dict)
+        pdf_buffer = BytesIO()
+        c = canvas.Canvas(pdf_buffer, pagesize=letter)
+        width, height = letter
+        c.drawString(100, 700, "FOO")
+        image_x = 100
+        image_y = 500
+        image_width = 200
+        image_height = 200
+        c.drawImage(
+            byte_stream, image_x, image_y, width=image_width, height=image_height
+        )
+        c.drawString(100, image_y - 50, "FOOBAR")
+        c.save()
+        pdf_buffer.seek(0)
+        # return send_file(pdf_buffer, as_attachment=True, download_name='your_file.pdf', mimetype='application/pdf')
+        # return json.dumps({"res": base64.b64encode(img_byte_arr.getvalue()).decode("ascii")})
+        blob = bucket.blob("path/to/save/your_file.pdf")
+        blob.upload_from_file(pdf_buffer, content_type="application/pdf")
+        pdf_url = blob.public_url
+        # return pdf_url
+        return result
 
     @staticmethod
     @app.route("/api/professional_get_job_offers/<pro_id>", methods=["GET"])
