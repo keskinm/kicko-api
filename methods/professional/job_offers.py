@@ -8,6 +8,7 @@ from firebase_admin import credentials, exceptions, get_app, initialize_app, sto
 from flask import jsonify, request
 from PIL import Image
 from reportlab.lib.pagesizes import letter
+from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 
 import syntax
@@ -41,31 +42,21 @@ class JobOffers(Methods):
         blob.download_to_file(byte_stream)
         byte_stream.seek(0)
         image = Image.open(byte_stream)
-        result = jsonify({"success": True})
-        result.status_code = 200
-        return result
-
+        image_reader = ImageReader(byte_stream)
         pdf_buffer = BytesIO()
         c = canvas.Canvas(pdf_buffer, pagesize=letter)
         width, height = letter
         c.drawString(100, 700, "FOO")
-        image_x = 100
-        image_y = 500
-        image_width = 200
-        image_height = 200
-        c.drawImage(
-            byte_stream, image_x, image_y, width=image_width, height=image_height
-        )
-        c.drawString(100, image_y - 50, "FOOBAR")
+        c.drawImage(image_reader, 100, 500, width=200, height=200)
+        c.drawString(100, 450, "FOOBAR")
         c.save()
         pdf_buffer.seek(0)
-        # return send_file(pdf_buffer, as_attachment=True, download_name='your_file.pdf', mimetype='application/pdf')
+        # return send_file(pdf_buffer, as_attachment=True, download_name='job_offer.pdf', mimetype='application/pdf')
         # return json.dumps({"res": base64.b64encode(img_byte_arr.getvalue()).decode("ascii")})
-        blob = bucket.blob("path/to/save/your_file.pdf")
+        blob = bucket.blob(f"professional/{pro_username}/job_offer_pdfs/{job_id}.pdf")
         blob.upload_from_file(pdf_buffer, content_type="application/pdf")
         pdf_url = blob.public_url
-        # return pdf_url
-        return result
+        return jsonify({"success": True, "pdf_url": pdf_url})
 
     @staticmethod
     @app.route("/api/professional_get_job_offers/<pro_id>", methods=["GET"])
