@@ -39,8 +39,7 @@ class JobOffers(Methods):
         byte_stream = BytesIO()
         blob.download_to_file(byte_stream)
         byte_stream.seek(0)
-        image_data = base64.b64decode(byte_stream.read())
-        # image = Image.open(BytesIO(image_data))
+        image = Image.open(byte_stream)
         result = jsonify({"success": True})
         result.status_code = 200
         return result
