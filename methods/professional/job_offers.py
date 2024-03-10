@@ -31,6 +31,13 @@ class JobOffers(Methods):
         "/api/professional_get_job_offer/<pro_username>/<job_id>", methods=["GET"]
     )
     def professional_get_job_offer(pro_username, job_id):
+        def inspect(_pdf_buffer):
+            """For debug purpose."""
+            _pdf_buffer.seek(0)
+            with open("mypdf.pdf", "wb") as f:
+                f.write(_pdf_buffer.getvalue())
+            _pdf_buffer.seek(0)
+
         try:
             _ = get_app()
         except ValueError:
@@ -56,6 +63,9 @@ class JobOffers(Methods):
         blob = bucket.blob(f"professional/{pro_username}/job_offer_pdfs/{job_id}.pdf")
         blob.upload_from_file(pdf_buffer, content_type="application/pdf")
         pdf_url = blob.public_url
+
+        inspect(pdf_buffer)
+
         return jsonify({"success": True, "pdf_url": pdf_url})
 
     @staticmethod
