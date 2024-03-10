@@ -57,16 +57,15 @@ class JobOffers(Methods):
         c.drawImage(image_reader, 100, 500, width=200, height=200)
         c.drawString(100, 450, "FOOBAR")
         c.save()
-        pdf_buffer.seek(0)
-        # return send_file(pdf_buffer, as_attachment=True, download_name='job_offer.pdf', mimetype='application/pdf')
-        # return json.dumps({"res": base64.b64encode(img_byte_arr.getvalue()).decode("ascii")})
+        """
         blob = bucket.blob(f"professional/{pro_username}/job_offer_pdfs/{job_id}.pdf")
         blob.upload_from_file(pdf_buffer, content_type="application/pdf")
         pdf_url = blob.public_url
-
-        inspect(pdf_buffer)
-
         return jsonify({"success": True, "pdf_url": pdf_url})
+        """
+        pdf_buffer.seek(0)
+        res = base64.b64encode(pdf_buffer.getvalue()).decode("ascii")
+        return json.dumps({"res": res})
 
     @staticmethod
     @app.route("/api/professional_get_job_offers/<pro_id>", methods=["GET"])
