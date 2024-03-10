@@ -7,6 +7,7 @@ import qrcode
 from firebase_admin import (credentials, exceptions, get_app, initialize_app,
                             storage)
 from flask import jsonify, request
+from PIL import Image
 
 import syntax
 from app import app
@@ -24,8 +25,8 @@ class JobOffers(Methods):
         Methods.__init__(self, post_methods=post_rules)
 
     @staticmethod
-    @app.route("/api/professional_get_job_offer/<job_id>", methods=["GET"])
-    def professional_get_job_offer(job_id):
+    @app.route("/api/professional_get_job_offer/<pro_username>/<job_id>", methods=["GET"])
+    def professional_get_job_offer(pro_username, job_id):
         try:
             firebase_app = get_app()
         except ValueError:
@@ -34,17 +35,27 @@ class JobOffers(Methods):
                 cred, {"storageBucket": "kicko-b75db.appspot.com"}
             )
         bucket = storage.bucket()
-        blob = bucket.blob('professional/bachata7/job_offer_qr_codes/1')
+        blob = bucket.blob(f'professional/{pro_username}/job_offer_qr_codes/{job_id}')
         byte_stream = BytesIO()
         blob.download_to_file(byte_stream)
         byte_stream.seek(0)
         image_data = base64.b64decode(byte_stream.read())
-        from PIL import Image
-        image = Image.open(BytesIO(image_data))
+        # image = Image.open(BytesIO(image_data))
         result = jsonify({"success": True})
         result.status_code = 200
         return result
 
+        canvas = Canvas("font-colors.pdf", pagesize=LETTER)
+        canvas.setFont("Times-Roman", 12)
+        canvas.setFillColor(blue)
+        canvas.drawString(1 * inch, 10 * inch, "Blue text")
+        canvas.save()
+        # ---------------------------------------------
+        r_dict = {
+            "img": base64.b64encode(img_byte_arr.getvalue()).decode("ascii"),
+            "id": new_job_offer_id,
+        }
+        return json.dumps(r_dict)
 
     @staticmethod
     @app.route("/api/professional_get_job_offers/<pro_id>", methods=["GET"])
