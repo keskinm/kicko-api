@@ -1,8 +1,11 @@
 import base64
 import io
 import json
+from io import BytesIO
 
 import qrcode
+from firebase_admin import (credentials, exceptions, get_app, initialize_app,
+                            storage)
 from flask import jsonify, request
 
 import syntax
@@ -19,6 +22,29 @@ class JobOffers(Methods):
             self.candidate_get_job_offers,
         ]
         Methods.__init__(self, post_methods=post_rules)
+
+    @staticmethod
+    @app.route("/api/professional_get_job_offer/<job_id>", methods=["GET"])
+    def professional_get_job_offer(job_id):
+        try:
+            firebase_app = get_app()
+        except ValueError:
+            cred = credentials.Certificate("kicko-b75db-ece1605913a6.json")
+            firebase_app = initialize_app(
+                cred, {"storageBucket": "kicko-b75db.appspot.com"}
+            )
+        bucket = storage.bucket()
+        blob = bucket.blob('professional/bachata7/job_offer_qr_codes/1')
+        byte_stream = BytesIO()
+        blob.download_to_file(byte_stream)
+        byte_stream.seek(0)
+        image_data = base64.b64decode(byte_stream.read())
+        from PIL import Image
+        image = Image.open(BytesIO(image_data))
+        result = jsonify({"success": True})
+        result.status_code = 200
+        return result
+
 
     @staticmethod
     @app.route("/api/professional_get_job_offers/<pro_id>", methods=["GET"])

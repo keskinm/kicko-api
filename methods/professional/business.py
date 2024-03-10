@@ -1,9 +1,9 @@
 from flask import jsonify, request
 
+from app import app
 from methods.base import Methods
 from methods.common import make_query, replace, row_to_dict
 from tables.professional.business import Business as TBusiness
-from app import app
 
 
 class Business(Methods):
