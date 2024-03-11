@@ -1,6 +1,7 @@
 import base64
 import io
 import json
+import os
 from io import BytesIO
 
 import qrcode
@@ -41,7 +42,7 @@ class JobOffers(Methods):
         try:
             _ = get_app()
         except ValueError:
-            cred = credentials.Certificate("kicko-b75db-ece1605913a6.json")
+            cred = credentials.Certificate(os.environ.get("GOOGLE_CREDENTIALS"))
             _ = initialize_app(cred, {"storageBucket": "kicko-b75db.appspot.com"})
         bucket = storage.bucket()
         blob = bucket.blob(f"professional/{pro_username}/job_offer_qr_codes/{job_id}")
