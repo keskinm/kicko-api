@@ -48,11 +48,11 @@ class JobOffers(Methods):
         byte_stream = BytesIO()
         blob.download_to_file(byte_stream)
         byte_stream.seek(0)
-        image = Image.open(byte_stream)
+        # image = Image.open(byte_stream)
         image_reader = ImageReader(byte_stream)
         pdf_buffer = BytesIO()
         c = canvas.Canvas(pdf_buffer, pagesize=letter)
-        width, height = letter
+        # width, height = letter
         c.drawString(100, 700, "FOO")
         c.drawImage(image_reader, 100, 500, width=200, height=200)
         c.drawString(100, 450, "FOOBAR")
