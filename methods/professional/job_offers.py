@@ -90,7 +90,7 @@ class JobOffers(Methods):
         input_json = request.get_json(force=True)
         filters = []
         city = input_json.get("city", None)
-        if city is not None and city != syntax.all_cities:
+        if city and city != syntax.all_cities:
             legit_business = make_query(Business, Business.city == input_json["city"])
             legit_business = [row_to_dict(o) for o in legit_business]
             legit_business = list(map(lambda d: d["id"], legit_business))
