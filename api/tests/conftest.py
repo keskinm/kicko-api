@@ -9,20 +9,16 @@ from app import app
 from database.base import Base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-# @todo -------------- FACTORY A UTILISER
 from api.associations.job_offer_candidate_association import JobOfferCandidate
 from api.base import register_instance_methods
-from api.candidate.candidate import Candidate
-from api.professional.business import Business
-from api.professional.job_offers import JobOffers
-from api.professional.professional import Professional
-for _class in [Candidate, Professional, Business, JobOffers, JobOfferCandidate]:
-    register_instance_methods(app, _class())
-
+from api.controllers_factory import controllers
 
 
 @pytest.fixture(scope='module')
 def test_client():
+    for controller in controllers:
+        register_instance_methods(app, controller())
+
     app.config['TESTING'] = True
     app.config['DATABASE_URL'] = "sqlite:///test_database.db"
 
