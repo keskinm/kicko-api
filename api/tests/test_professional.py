@@ -1,24 +1,17 @@
+import json
+from unittest import mock
+
+import pytest
+
+
 def test_delete_candidate_account(test_client):
-    response = test_client.get('/api/delete_candidate_account', headers={"Authorization": "Bearer token"})
-    assert response.status_code == 200
+    with mock.patch("api.token.decode_auth_token") as mock_decode:
+        mock_decode.return_value = (True, "email@example.com")
 
-
-# def test_delete_candidate_account_with_valid_token():
-#     valid_auth_header = 'Bearer valid_token'
-#     response = self.client.get(
-#         "/api/delete_candidate_account",
-#         headers={"Authorization": valid_auth_header}
-#     )
-#     self.assertEqual(response.status_code, 200)
-#     data = json.loads(response.data)
-#     self.assertEqual(data['status'], 'success')
-#
-# def test_delete_candidate_account_with_invalid_token():
-#     invalid_auth_header = 'Bearer invalid_token'
-#     response = self.client.get(
-#         "/api/delete_candidate_account",
-#         headers={"Authorization": invalid_auth_header}
-#     )
-#     self.assertEqual(response.status_code, 401)
-#     data = json.loads(response.data)
-#     self.assertEqual(data['status'], 'fail')
+        response = test_client.get(
+            "/api/delete_candidate_account",
+            headers={"Authorization": "Bearer faux_token_valide"},
+        )
+        assert response.status_code == 200
+        data = json.loads(response.data)
+        assert data["status"] == "success"

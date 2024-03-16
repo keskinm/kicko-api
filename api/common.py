@@ -1,6 +1,8 @@
 import enum
+
 from app import app
 from database.database import SessionLocal
+
 
 def delete_row(handling_class, filters):
     session = SessionLocal()
@@ -93,6 +95,10 @@ def delete_user(table, auth_header):
         auth_token = auth_header.split(" ")[1]
 
         succeed, resp = decode_auth_token(auth_token, app.config.get("SECRET_KEY"))
+        print("ICI", succeed, resp)
+        import time
+
+        time.sleep(100)
         if succeed:
             delete_row(
                 table,
