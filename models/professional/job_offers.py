@@ -16,7 +16,6 @@ class JobOffers(Base):
 
     business_id = Column(Integer, ForeignKey(Professional.id))
 
-    # @todo rename candidate -> candidates wherever need
     candidate = relationship(
         "Candidate",
         secondary=job_offer_candidate_association,

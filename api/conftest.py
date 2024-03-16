@@ -23,8 +23,6 @@ def test_client():
     app.config['DATABASE_URL'] = "sqlite:///test_database.db"
 
     test_engine = create_engine(app.config['DATABASE_URL'], echo=True)
-    # from tables import tables_importer
-    #@todo RENOMMER "tables" en "models"
     Base.metadata.create_all(test_engine)
     app.db_session = scoped_session(sessionmaker(autocommit=False,
                                                   autoflush=False,
