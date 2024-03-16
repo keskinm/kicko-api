@@ -1,8 +1,8 @@
 from flask import jsonify, request
 
 from app import app
-from methods.base import Methods, instance_method_route
-from methods.common import (
+from api.base import ApiController, instance_method_route
+from api.common import (
     add_row,
     delete_user,
     get_token,
@@ -14,7 +14,7 @@ from tables.candidate.candidate import Candidate as TCandidate
 from tables.candidate.candidate import enums_to_module, enums_values
 
 
-class Candidate(Methods):
+class Candidate(ApiController):
     def __init__(self):
         super().__init__()
         self.enums_set_attr = {

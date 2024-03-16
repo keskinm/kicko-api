@@ -30,7 +30,7 @@ def instance_method_route(route, methods=["GET"]):
     return decorator
 
 
-class Methods:
+class ApiController:
     def __init__(self, url_rules=None, post_methods=None, get_methods=None):
         self.url_rules = url_rules or {}
 

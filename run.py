@@ -3,12 +3,12 @@ import os
 from flask_cors import CORS
 
 from app import app
-from methods.associations.job_offer_candidate_association import JobOfferCandidate
-from methods.base import register_instance_methods
-from methods.candidate.candidate import Candidate
-from methods.professional.business import Business
-from methods.professional.job_offers import JobOffers
-from methods.professional.professional import Professional
+from api.associations.job_offer_candidate_association import JobOfferCandidate
+from api.base import register_instance_methods
+from api.candidate.candidate import Candidate
+from api.professional.business import Business
+from api.professional.job_offers import JobOffers
+from api.professional.professional import Professional
 
 app.secret_key = os.urandom(12)
 

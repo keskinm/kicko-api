@@ -1,20 +1,14 @@
 from flask import jsonify, request
 
 from app import app
-from methods.associations.base import Association
-from methods.base import Methods, instance_method_route
-from methods.common import make_query, row_to_dict
+from api.associations.base import Association
+from api.base import ApiController, instance_method_route
+from api.common import make_query, row_to_dict
 from tables.candidate.candidate import Candidate
 from tables.professional.job_offers import JobOffers
 
 
-class JobOfferCandidate(Methods, Association):
-    def __init__(self):
-        post_rules = [
-            self.apply_job_offer,
-        ]
-        Methods.__init__(self, post_methods=post_rules)
-
+class JobOfferCandidate(ApiController, Association):
     @instance_method_route(
         "applied_job_offer/<candidate_id>/<job_offer_id>", methods=["GET"]
     )

@@ -14,19 +14,13 @@ from reportlab.pdfgen import canvas
 
 import syntax
 from app import app
-from methods.base import Methods
-from methods.common import add_row, delete_row, make_query, row_to_dict, unique
+from api.base import ApiController
+from api.common import add_row, delete_row, make_query, row_to_dict, unique
 from tables.professional.business import Business
 from tables.professional.job_offers import JobOffers as TJobOffers
 
 
-class JobOffers(Methods):
-    def __init__(self):
-        post_rules = [
-            self.candidate_get_job_offers,
-        ]
-        Methods.__init__(self, post_methods=post_rules)
-
+class JobOffers(ApiController):
     @staticmethod
     @app.route(
         "/api/professional_get_job_offer/<pro_username>/<job_id>", methods=["GET"]
@@ -86,7 +80,9 @@ class JobOffers(Methods):
         result.status_code = 200
         return result
 
-    def candidate_get_job_offers(self):
+    @staticmethod
+    @app.route("/api/candidate_get_job_offers", methods=["POST"])
+    def candidate_get_job_offers():
         input_json = request.get_json(force=True)
         filters = []
         city = input_json.get("city", None)

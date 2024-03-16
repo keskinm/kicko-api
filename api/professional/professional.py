@@ -1,8 +1,8 @@
 from flask import jsonify, request
 
 from app import app
-from methods.base import Methods
-from methods.common import (
+from api.base import ApiController
+from api.common import (
     add_row,
     delete_user,
     get_token,
@@ -14,7 +14,7 @@ from tables.professional.business import Business as TBusiness
 from tables.professional.professional import Professional as TProfessional
 
 
-class Professional(Methods):
+class Professional(ApiController):
     @staticmethod
     @app.route("/api/professional", methods=["GET"])
     def professional():

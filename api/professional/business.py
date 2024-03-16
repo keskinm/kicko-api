@@ -1,12 +1,12 @@
 from flask import jsonify, request
 
 from app import app
-from methods.base import Methods
-from methods.common import make_query, replace, row_to_dict
+from api.base import ApiController
+from api.common import make_query, replace, row_to_dict
 from tables.professional.business import Business as TBusiness
 
 
-class Business(Methods):
+class Business(ApiController):
     @staticmethod
     @app.route("/api/get_business/<professional_id>", methods=["GET"])
     def get_business(professional_id):
