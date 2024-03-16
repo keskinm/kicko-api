@@ -13,9 +13,9 @@ from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 
 import syntax
-from app import app
 from api.base import ApiController
 from api.common import add_row, delete_row, make_query, row_to_dict, unique
+from app import app
 from tables.professional.business import Business
 from tables.professional.job_offers import JobOffers as TJobOffers
 

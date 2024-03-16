@@ -1,6 +1,5 @@
 from flask import jsonify, request
 
-from app import app
 from api.base import ApiController, instance_method_route
 from api.common import (
     add_row,
@@ -10,6 +9,7 @@ from api.common import (
     make_query,
     row_to_dict,
 )
+from app import app
 from tables.candidate.candidate import Candidate as TCandidate
 from tables.candidate.candidate import enums_to_module, enums_values
 

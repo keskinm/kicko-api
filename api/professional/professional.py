@@ -1,6 +1,5 @@
 from flask import jsonify, request
 
-from app import app
 from api.base import ApiController
 from api.common import (
     add_row,
@@ -10,6 +9,7 @@ from api.common import (
     make_query,
     row_to_dict,
 )
+from app import app
 from tables.professional.business import Business as TBusiness
 from tables.professional.professional import Professional as TProfessional
 

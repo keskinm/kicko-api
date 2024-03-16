@@ -1,9 +1,9 @@
 from flask import jsonify, request
 
-from app import app
 from api.associations.base import Association
 from api.base import ApiController, instance_method_route
 from api.common import make_query, row_to_dict
+from app import app
 from tables.candidate.candidate import Candidate
 from tables.professional.job_offers import JobOffers
 
