@@ -91,14 +91,8 @@ from api.token import decode_auth_token, encode_auth_token
 
 def delete_user(table, auth_header):
     if auth_header:
-        print("AUTH TOKEN NON VIDE")
         auth_token = auth_header.split(" ")[1]
-
         succeed, resp = decode_auth_token(auth_token, app.config.get("SECRET_KEY"))
-        print("ICI", succeed, resp)
-        import time
-
-        time.sleep(100)
         if succeed:
             delete_row(
                 table,
@@ -121,9 +115,7 @@ def delete_user(table, auth_header):
 
 def get_user(table, auth_header):
     if auth_header:
-        print("AUTH TOKEN NON VIDE")
         auth_token = auth_header.split(" ")[1]
-
         succeed, resp = decode_auth_token(auth_token, app.config.get("SECRET_KEY"))
         if succeed:
             user = make_query(table, filters=table.username == resp).first()
