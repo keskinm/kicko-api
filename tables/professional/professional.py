@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, String
 
-from engine.base import Base
+from tables.user.user import UserBase
 
 
-class Professional(Base):
+class Professional(UserBase):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, unique=True)
@@ -15,22 +15,5 @@ class Professional(Base):
     zone = Column(String)
     phone_number = Column(String)
 
-    language = Column(String)
-
-    def __init__(
-        self,
-        firebase_id,
-        username,
-        password,
-        email,
-        country=None,
-        zone=None,
-        phone_number=None,
-    ):
-        self.firebase_id = firebase_id
-        self.username = username
-        self.password = password
-        self.email = email
-        self.country = country
-        self.zone = zone
-        self.phone_number = phone_number
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

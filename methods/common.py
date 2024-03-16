@@ -130,7 +130,6 @@ def get_user(table, auth_header):
                 "data": {
                     "username": user.username,
                     "email": user.email,
-                    "password": user.password,
                     "id": str(user.id),
                 },
             }
@@ -153,9 +152,9 @@ def get_token(table, input_json):
     password = input_json["password"]
     query_result = make_query(
         table,
-        filters=and_(table.username == username, table.password == password),
+        filters=and_(table.username == username),
     ).first()
-    if query_result:
+    if query_result and query_result.check_password(password):
         token = encode_auth_token(username, app.config.get("SECRET_KEY"))
         result = jsonify({"token": token})
         result.status_code = 200
