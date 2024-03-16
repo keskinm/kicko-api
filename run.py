@@ -3,6 +3,8 @@ import os
 from flask_cors import CORS
 
 from app import app
+
+# @todo -------------- FACTORY A UTILISER
 from api.associations.job_offer_candidate_association import JobOfferCandidate
 from api.base import register_instance_methods
 from api.candidate.candidate import Candidate
