@@ -4,7 +4,7 @@ from sqlalchemy import Column, Enum, Integer, String
 from sqlalchemy.orm import relationship
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from engine.base import Base
+from database.base import Base
 
 
 class UserBase(Base):

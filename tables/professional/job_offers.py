@@ -1,7 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
-from engine.base import Base
+from database.base import Base
 from tables.associations.associations import job_offer_candidate_association
 from tables.professional.professional import Professional
 

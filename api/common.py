@@ -1,20 +1,16 @@
 import enum
-
-from sqlalchemy.orm import sessionmaker
-
 from app import app
-from engine.engine import MAIN_ENGINE
-
+from database.database import SessionLocal
 
 def delete_row(handling_class, filters):
-    session = sessionmaker(bind=MAIN_ENGINE)()
+    session = SessionLocal()
     session.query(handling_class).filter(*filters).delete()
     session.commit()
     session.close()
 
 
 def add_row(handling_class, content, end_session=True):
-    session = sessionmaker(bind=MAIN_ENGINE)()
+    session = SessionLocal()
     instance = handling_class(**content)
     session.add(instance)
     session.commit()
@@ -26,7 +22,7 @@ def add_row(handling_class, content, end_session=True):
 
 
 def make_query(handling_class, filters=None, end_session=True, session=None):
-    session = session or sessionmaker(bind=MAIN_ENGINE)()
+    session = session or SessionLocal()
     if filters is not None:
         query_result = session.query(handling_class).filter(filters)
     else:
@@ -59,7 +55,7 @@ def replace(session, table_row, fields):
 
 
 def unique(handling_class, column_name, filters=None):
-    session = sessionmaker(bind=MAIN_ENGINE)()
+    session = SessionLocal()
     if filters is not None:
         providers_table = session.query(handling_class).filter(filters)
     else:

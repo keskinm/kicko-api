@@ -1,6 +1,6 @@
 from sqlalchemy import Column, ForeignKey, Integer, Table
 
-from engine.base import Base
+from database.base import Base
 
 # @todo Gather all tables in one file.
 

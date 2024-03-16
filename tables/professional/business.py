@@ -1,6 +1,6 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
 
-from engine.base import Base
+from database.base import Base
 from tables.professional.professional import Professional
 
 
