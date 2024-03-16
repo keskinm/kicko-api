@@ -3,7 +3,7 @@ from flask import jsonify, request
 from api.base import ApiController
 from api.common import make_query, replace, row_to_dict
 from app import app
-from tables.professional.business import Business as TBusiness
+from models.professional.business import Business as TBusiness
 
 
 class Business(ApiController):

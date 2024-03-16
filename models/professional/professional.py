@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
 
-from tables.user.user import UserBase
+from models.user.user import UserBase
 
 
 class Professional(UserBase):

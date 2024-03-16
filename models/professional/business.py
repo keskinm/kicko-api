@@ -1,7 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
 
 from database.base import Base
-from tables.professional.professional import Professional
+from models.professional.professional import Professional
 
 
 class Business(Base):

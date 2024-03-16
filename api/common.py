@@ -84,7 +84,7 @@ def unique(handling_class, column_name, filters=None):
 from flask import jsonify, make_response
 from sqlalchemy import and_
 
-from models import decode_auth_token, encode_auth_token
+from api.token import decode_auth_token, encode_auth_token
 
 
 def delete_user(table, auth_header):

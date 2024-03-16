@@ -3,8 +3,8 @@ import enum
 from sqlalchemy import Column, Enum, String
 from sqlalchemy.orm import relationship
 
-from tables.associations.associations import job_offer_candidate_association
-from tables.user.user import UserBase
+from models.associations.associations import job_offer_candidate_association
+from models.user.user import UserBase
 
 
 class Sex(enum.Enum):

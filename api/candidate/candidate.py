@@ -10,8 +10,8 @@ from api.common import (
     row_to_dict,
 )
 from app import app
-from tables.candidate.candidate import Candidate as TCandidate
-from tables.candidate.candidate import enums_to_module, enums_values
+from models.candidate.candidate import Candidate as TCandidate
+from models.candidate.candidate import enums_to_module, enums_values
 
 
 class Candidate(ApiController):

@@ -2,8 +2,8 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from database.base import Base
-from tables.associations.associations import job_offer_candidate_association
-from tables.professional.professional import Professional
+from models.associations.associations import job_offer_candidate_association
+from models.professional.professional import Professional
 
 
 class JobOffers(Base):

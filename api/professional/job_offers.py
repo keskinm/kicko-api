@@ -16,8 +16,8 @@ import syntax
 from api.base import ApiController
 from api.common import add_row, delete_row, make_query, row_to_dict, unique
 from app import app
-from tables.professional.business import Business
-from tables.professional.job_offers import JobOffers as TJobOffers
+from models.professional.business import Business
+from models.professional.job_offers import JobOffers as TJobOffers
 
 
 class JobOffers(ApiController):

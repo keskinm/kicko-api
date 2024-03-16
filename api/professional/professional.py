@@ -10,8 +10,8 @@ from api.common import (
     row_to_dict,
 )
 from app import app
-from tables.professional.business import Business as TBusiness
-from tables.professional.professional import Professional as TProfessional
+from models.professional.business import Business as TBusiness
+from models.professional.professional import Professional as TProfessional
 
 
 class Professional(ApiController):
