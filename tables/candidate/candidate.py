@@ -47,11 +47,6 @@ class Candidate(UserBase):
         *args,
         **kwargs
     ):
-        print("ARGS")
-        print(args)
-        print("KWARGS")
-        print(kwargs)
-        print("ICHI\n\n\n\n\n\n\n")
         super().__init__(*args, **kwargs)
 
         self.study_level = study_level
