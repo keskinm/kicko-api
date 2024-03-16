@@ -102,15 +102,12 @@ def delete_user(table, auth_header):
             return make_response(jsonify(response_object)), 200
         response_object = {"status": "fail", "message": resp}
         return make_response(jsonify(response_object)), 401
-
     else:
-        # @todo Why a double call everytime with the first one here?
-        # Find why and then put fail and 401 response status
         response_object = {
-            "status": "success",
-            "message": "Provide a valid auth token.",
+            "status": "fail",
+            "message": "Authentication token is missing or invalid.",
         }
-        return make_response(jsonify(response_object)), 200
+        return make_response(jsonify(response_object)), 401
 
 
 def get_user(table, auth_header):
@@ -130,15 +127,12 @@ def get_user(table, auth_header):
             return make_response(jsonify(response_object)), 200
         response_object = {"status": "fail", "message": resp}
         return make_response(jsonify(response_object)), 401
-
     else:
-        # @todo Why a double call everytime with the first one here?
-        # Find why and then put fail and 401 response status
         response_object = {
-            "status": "success",
-            "message": "Provide a valid auth token.",
+            "status": "fail",
+            "message": "Authentication token is missing or invalid.",
         }
-        return make_response(jsonify(response_object)), 200
+        return make_response(jsonify(response_object)), 401
 
 
 def get_token(table, input_json):
