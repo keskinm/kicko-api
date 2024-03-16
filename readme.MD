@@ -1,10 +1,11 @@
 ### Launch in dev mode (local):
 
-* Create tables: `python -m database.create`
 * Set environment variables
 * FLASK_APP=run.py flask run
 
 ### Alembic migrations
 
-* It is initialized with `alembic init alembic`
-* 
+* Alemebic is initialized with `alembic init alembic` (once done it creates alembic 
+folder that contains migrations and no need to re-do the command)
+* To create (the first or next's) migration: `alembic revision --autogenerate -m "Initial migration"`
+* At each migration created we apply it with `alembic upgrade head`
