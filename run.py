@@ -1,11 +1,11 @@
 import os
 
 from flask_cors import CORS
-from settings import set_local_settings
+from settings import LocalSettings
 
 from app import app
 
-set_local_settings(app)
+LocalSettings(app)
 app.secret_key = os.urandom(12)
 CORS(app)
 
