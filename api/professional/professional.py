@@ -1,11 +1,7 @@
-from api.user import User
 from flask import jsonify, request
 
-from api.common import (
-    add_row,
-    make_query,
-    row_to_dict,
-)
+from api.common import add_row, make_query, row_to_dict
+from api.user import User
 from app import app
 from models.professional.business import Business as TBusiness
 from models.professional.professional import Professional as TProfessional

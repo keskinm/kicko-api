@@ -1,11 +1,10 @@
-from functools import partial, wraps
+"""Api Controller base module."""
 
-from app import app
-from models.candidate.candidate import Candidate
-from models.professional.professional import Professional
+from functools import wraps
 
 
 def register_instance_methods(app, instance):
+    """Register all <<instance_method_route>> decorated routes to app."""
     for attr_name in dir(instance):
         attr = getattr(instance, attr_name)
         if hasattr(attr, "_route") and hasattr(attr, "_methods"):
@@ -15,7 +14,7 @@ def register_instance_methods(app, instance):
             )
 
 
-def instance_method_route(route, methods=["GET"]):
+def instance_method_route(route, methods):
     """Decorator to add instance methods."""
 
     def decorator(func):

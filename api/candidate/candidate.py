@@ -1,7 +1,7 @@
 from flask import jsonify, request
 
 from api.base import instance_method_route
-from api.common import make_query, row_to_dict, add_row
+from api.common import add_row, make_query, row_to_dict
 from api.user import User
 from app import app
 from models.candidate.candidate import Candidate as TCandidate
