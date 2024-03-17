@@ -33,3 +33,7 @@ class TestSettings(CommonSettings):
         super().__init__(app)
 
 
+class ProdSettings(CommonSettings):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        raise NotImplementedError
