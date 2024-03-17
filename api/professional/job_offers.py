@@ -20,12 +20,21 @@ from models.professional.business import Business
 from models.professional.job_offers import JobOffers as TJobOffers
 
 
+def add_multiline_text(_canvas, text, start_x, start_y, line_height):
+    lines = text.split("\n")
+    current_y = start_y
+    for line in lines:
+        _canvas.drawString(start_x, current_y, line.strip())
+        current_y -= line_height
+    return current_y
+
+
 class JobOffers(ApiController):
     @staticmethod
     @app.route(
         "/api/professional_get_job_offer/<pro_username>/<job_id>", methods=["GET"]
     )
-    def professional_get_job_offer(pro_username, job_id):
+    def professional_get_job_offer(pro_username, job_id, debug=False):
         def inspect(_pdf_buffer):
             """For debug purpose."""
             _pdf_buffer.seek(0)
@@ -38,26 +47,36 @@ class JobOffers(ApiController):
         except ValueError:
             cred = credentials.Certificate(os.environ.get("GOOGLE_CREDENTIALS"))
             _ = initialize_app(cred, {"storageBucket": "kicko-b75db.appspot.com"})
+
         bucket = storage.bucket()
         blob = bucket.blob(f"professional/{pro_username}/job_offer_qr_codes/{job_id}")
         byte_stream = BytesIO()
         blob.download_to_file(byte_stream)
         byte_stream.seek(0)
-        # image = Image.open(byte_stream)
         image_reader = ImageReader(byte_stream)
         pdf_buffer = BytesIO()
-        c = canvas.Canvas(pdf_buffer, pagesize=letter)
-        # width, height = letter
-        c.drawString(100, 700, "FOO")
-        c.drawImage(image_reader, 100, 500, width=200, height=200)
-        c.drawString(100, 450, "FOOBAR")
-        c.save()
-        """
-        blob = bucket.blob(f"professional/{pro_username}/job_offer_pdfs/{job_id}.pdf")
-        blob.upload_from_file(pdf_buffer, content_type="application/pdf")
-        pdf_url = blob.public_url
-        return jsonify({"success": True, "pdf_url": pdf_url})
-        """
+        _canvas = canvas.Canvas(pdf_buffer, pagesize=letter)
+        job = row_to_dict(make_query(TJobOffers, TJobOffers.id == job_id).one())
+        text = ""
+        for attr in ["name", "description", "requires"]:
+            if job.get(attr, None):
+                prepend = ""
+                if attr == "description":
+                    prepend = "Description :"
+                elif attr == "requires":
+                    prepend = "Requis :"
+                elif attr == "name":
+                    prepend = "[Poste à pourvoir] Nous recrutons !"
+                    prepend = f"{prepend} :" if job.get(attr, None) else prepend
+                text += f"\n{prepend} {job.get(attr)} "
+        text += "\n Veuillez scanner le code QR pour postuler:"
+        current_y = 700
+        if text:
+            current_y = add_multiline_text(_canvas, text, 50, 700, 20)
+        _canvas.drawImage(image_reader, 200, current_y - 200, width=200, height=200)
+        _canvas.save()
+        if debug:
+            inspect(pdf_buffer)
         pdf_buffer.seek(0)
         res = base64.b64encode(pdf_buffer.getvalue()).decode("ascii")
         return json.dumps({"res": res})

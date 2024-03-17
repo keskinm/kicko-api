@@ -26,7 +26,7 @@ def add_row(handling_class, content, end_session=True):
 
 
 def make_query(handling_class, filters=None, end_session=True, session=None):
-    """Perform a query."""
+    """Perform a simple filtering query."""
     session = session or SessionLocal()
     if filters is not None:
         query_result = session.query(handling_class).filter(filters)
