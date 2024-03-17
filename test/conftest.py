@@ -16,10 +16,10 @@ from models.candidate.candidate import Candidate as mCandidate
 from models.professional.professional import Professional as mProfessional
 from models.professional.business import Business as mBusiness
 from models.professional.job_offers import JobOffers as mJobOffers
+from settings import set_test_settings
 
 
-for controller in controllers:
-    register_instance_methods(app, controller())
+set_test_settings(app)
 
 
 @pytest.fixture(scope="function")
