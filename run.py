@@ -19,15 +19,25 @@ def log_response(response):
         route_name = request.endpoint
         try:
             json_data = json.loads(response.data.decode('utf-8'))
-            with open(f"metrics/{route_name}.json", "w") as outfile:
-                json.dump(json_data, outfile)
+            file_path = f"metrics/{route_name}.json"
+
+            if os.path.exists(file_path):
+                with open(file_path, "r") as infile:
+                    try:
+                        existing_data = json.load(infile)
+                    except json.JSONDecodeError:
+                        existing_data = []
+            else:
+                existing_data = []
+
+            existing_data.append(json_data)
+            with open(file_path, "w") as outfile:
+                json.dump(existing_data, outfile)
         except json.JSONDecodeError as e:
             print(f"Erreur lors du décodage JSON pour la route {route_name}: {e}")
     else:
         print(f"Réponse non-JSON ou vide pour la route {request.endpoint}")
     return response
-
-
 
 @app.route("/")
 def home():
