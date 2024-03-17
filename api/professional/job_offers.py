@@ -38,7 +38,7 @@ class JobOffers(ApiController):
         def inspect(_pdf_buffer):
             """For debug purpose."""
             _pdf_buffer.seek(0)
-            with open("mypdf.pdf", "wb") as f:
+            with open("inspect.pdf", "wb") as f:
                 f.write(_pdf_buffer.getvalue())
             _pdf_buffer.seek(0)
 
