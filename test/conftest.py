@@ -1,6 +1,6 @@
 import os
 import sys
-
+from unittest import mock
 import pytest
 from sqlalchemy import create_engine
 
@@ -12,6 +12,9 @@ from api.base import register_instance_methods
 from api.controllers_factory import controllers
 from app import app
 from database.base import Base
+
+
+from models.candidate.candidate import Candidate as mCandidate
 
 for controller in controllers:
     register_instance_methods(app, controller())
@@ -32,7 +35,11 @@ def test_client():
     ctx = app.app_context()
     ctx.push()
     try:
-        yield testing_client
+        TestingSessionLocal = sessionmaker(
+            autocommit=False, autoflush=False, bind=test_engine
+        )
+        with mock.patch("api.common.SessionLocal", TestingSessionLocal):
+            yield testing_client
     finally:
         ctx.pop()
         Base.metadata.drop_all(test_engine)
@@ -42,7 +49,6 @@ def test_client():
 
 def fill_db_with_candidate(app):
     """Fill database with a Candidate instance."""
-    from models.candidate.candidate import Candidate as mCandidate
     obj = mCandidate(
         firebase_id="1234",
         username="toto",
@@ -57,6 +63,6 @@ def fill_db_with_candidate(app):
 
 
 @pytest.fixture(scope="function")
-def fill_db(test_client):
+def filled_db_test_client(test_client):
     fill_db_with_candidate(app)
     yield test_client
