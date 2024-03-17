@@ -14,12 +14,12 @@ from api.controllers_factory import controllers
 from app import app
 from database.base import Base
 
+for controller in controllers:
+    register_instance_methods(app, controller())
 
-@pytest.fixture(scope="module")
+
+@pytest.fixture(scope="function")
 def test_client():
-    for controller in controllers:
-        register_instance_methods(app, controller())
-
     app.config["TESTING"] = True
     app.config["DATABASE_URL"] = "sqlite:///test_database.db"
 
@@ -34,3 +34,4 @@ def test_client():
     ctx.push()
     yield testing_client
     ctx.pop()
+    Base.metadata.drop_all(test_engine)
