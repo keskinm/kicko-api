@@ -1,20 +1,16 @@
 from flask import jsonify, request
 
-from api.base import ApiController, instance_method_route
-from api.common import (
-    add_row,
-    delete_user,
-    get_token,
-    get_user,
-    make_query,
-    row_to_dict,
-)
+from api.base import instance_method_route
+from api.common import make_query, row_to_dict, add_row
+from api.user import User
 from app import app
 from models.candidate.candidate import Candidate as TCandidate
 from models.candidate.candidate import enums_to_module, enums_values
 
 
-class Candidate(ApiController):
+class Candidate(User):
+    """Candidate User."""
+
     def __init__(self):
         super().__init__()
         self.enums_set_attr = {
@@ -63,24 +59,6 @@ class Candidate(ApiController):
         result = jsonify(candidate)
         result.status_code = 200
         return result
-
-    @staticmethod
-    @app.route("/api/candidate", methods=["GET"])
-    def candidate():
-        auth_header = request.headers.get("Authorization")
-        return get_user(table=TCandidate, auth_header=auth_header)
-
-    @staticmethod
-    @app.route("/api/delete_candidate_account", methods=["GET"])
-    def delete_candidate_account():
-        auth_header = request.headers.get("Authorization")
-        return delete_user(table=TCandidate, auth_header=auth_header)
-
-    @staticmethod
-    @app.route("/api/candidate_authentication_token", methods=["POST"])
-    def candidate_authentication_token():
-        input_json = request.get_json(force=True)
-        return get_token(table=TCandidate, input_json=input_json)
 
     @staticmethod
     @app.route("/api/candidate_register", methods=["POST"])

@@ -12,14 +12,14 @@ from models.candidate.candidate import Candidate as mCandidate
         (None, 401, "fail"),
     ],
 )
-def test_delete_candidate_account(
+def test_delete_user_account(
     filled_db_test_client, auth_header, expc_status_code, expc_status
 ):
-    with mock.patch("api.common.decode_auth_token") as mock_decode:
+    with mock.patch("api.user.User.decode_auth_token") as mock_decode:
         mock_decode.return_value = (True, "toto@gmail.com")
 
         response = filled_db_test_client.get(
-            "/api/delete_candidate_account",
+            "/api/delete_user_account/candidate",
             headers=auth_header,
         )
         assert response.status_code == expc_status_code
