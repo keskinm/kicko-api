@@ -4,7 +4,6 @@ from flask_cors import CORS
 
 from app import app
 
-from api.associations.job_offer_candidate_association import JobOfferCandidate
 from api.base import register_instance_methods
 from api.controllers_factory import controllers
 

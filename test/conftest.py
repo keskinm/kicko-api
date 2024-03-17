@@ -8,7 +8,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from api.associations.job_offer_candidate_association import JobOfferCandidate
 from api.base import register_instance_methods
 from api.controllers_factory import controllers
 from app import app
