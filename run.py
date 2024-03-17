@@ -1,21 +1,12 @@
 import os
 
 from flask_cors import CORS
+from settings import local_settings
 
 from app import app
 
-from api.base import register_instance_methods
-from api.controllers_factory import controllers
-
+local_settings(app)
 app.secret_key = os.urandom(12)
-
-for variable in ["GOOGLE_CREDENTIALS"]:
-    if not os.environ.get(variable):
-        raise RuntimeError(f"Environment variable {variable} is unset.")
-
-for controller in controllers:
-    register_instance_methods(app, controller())
-
 CORS(app)
 
 @app.route("/")

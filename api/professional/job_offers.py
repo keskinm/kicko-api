@@ -5,7 +5,7 @@ import os
 from io import BytesIO
 
 import qrcode
-from firebase_admin import credentials, exceptions, get_app, initialize_app, storage
+from firebase_admin import storage
 from flask import jsonify, request
 from PIL import Image
 from reportlab.lib.pagesizes import letter
@@ -41,12 +41,6 @@ class JobOffers(ApiController):
             with open("mypdf.pdf", "wb") as f:
                 f.write(_pdf_buffer.getvalue())
             _pdf_buffer.seek(0)
-
-        try:
-            _ = get_app()
-        except ValueError:
-            cred = credentials.Certificate(os.environ.get("GOOGLE_CREDENTIALS"))
-            _ = initialize_app(cred, {"storageBucket": "kicko-b75db.appspot.com"})
 
         bucket = storage.bucket()
         blob = bucket.blob(f"professional/{pro_username}/job_offer_qr_codes/{job_id}")
