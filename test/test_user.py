@@ -16,13 +16,13 @@ from models.professional.professional import Professional as mProfessional
     ],
 )
 def test_delete_user_account(
-    filled_db_test_client, table, auth_header, expc_status_code, expc_status
+    with_users_test_client, table, auth_header, expc_status_code, expc_status
 ):
     email = app.db_session.query(table).first().email
     with mock.patch("api.user.User.decode_auth_token") as mock_decode:
         mock_decode.return_value = (True, email)
 
-        response = filled_db_test_client.get(
+        response = with_users_test_client.get(
             f"/api/delete_user_account/{table.__name__.lower()}",
             headers=auth_header,
         )

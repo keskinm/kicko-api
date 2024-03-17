@@ -45,6 +45,6 @@ def test_client():
 
 
 @pytest.fixture(scope="function")
-def filled_db_test_client(test_client):
+def with_users_test_client(test_client):
     fill_db_with_users(app)
     yield test_client
