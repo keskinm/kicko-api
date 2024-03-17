@@ -12,8 +12,10 @@ from api.base import register_instance_methods
 from api.controllers_factory import controllers
 from app import app
 from database.base import Base
-
-from test.enrich_database import fill_db_with_users
+from models.candidate.candidate import Candidate as mCandidate
+from models.professional.professional import Professional as mProfessional
+from models.professional.business import Business as mBusiness
+from models.professional.job_offers import JobOffers as mJobOffers
 
 
 for controller in controllers:
@@ -46,5 +48,51 @@ def test_client():
 
 @pytest.fixture(scope="function")
 def with_users_test_client(test_client):
-    fill_db_with_users(app)
+    """Fill database with a two users: one candidate and a pro."""
+    app.db_session.add(
+        mCandidate(
+            firebase_id="1234",
+            username="toto",
+            password="toto",
+            email="toto@gmail.com",
+            country="France",
+            zone="",
+            phone_number="070000000",
+        )
+    )
+    app.db_session.add(
+        mProfessional(
+            firebase_id="12345",
+            username="professional",
+            password="professional",
+            email="professional@gmail.com",
+            country="France",
+            zone="",
+            phone_number="070000000",
+        )
+    )
+    app.db_session.commit()
     yield test_client
+
+
+@pytest.fixture(scope="function")
+def fill_db_with_business(with_users_test_client):
+    pro_id = app.db_session.query(Professional).first().id
+    app.db_session.add(Business(professional_id=pro_id))
+    app.db_session.commit()
+    yield with_users_test_client
+
+
+@pytest.fixture(scope="function")
+def fill_db_with_job_offers_and_appliers(fill_db_with_business):
+    business_id = app.db_session.query(Business).first().id
+    app.db_session.add(
+        JobOffers(
+            name="12345",
+            description="professional",
+            requires="professional",
+            business_id=business_id,
+        )
+    )
+    app.db_session.commit()
+    yield fill_db_with_business
