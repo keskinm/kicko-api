@@ -31,6 +31,32 @@ def test_client():
     testing_client = app.test_client()
     ctx = app.app_context()
     ctx.push()
-    yield testing_client
-    ctx.pop()
-    Base.metadata.drop_all(test_engine)
+    try:
+        yield testing_client
+    finally:
+        ctx.pop()
+        Base.metadata.drop_all(test_engine)
+        app.db_session.remove()
+        test_engine.dispose()
+
+
+def fill_db_with_candidate(app):
+    """Fill database with a Candidate instance."""
+    from models.candidate.candidate import Candidate as mCandidate
+    obj = mCandidate(
+        firebase_id="1234",
+        username="toto",
+        password="toto",
+        email="toto@gmail.com",
+        country="France",
+        zone="",
+        phone_number="070000000",
+    )
+    app.db_session.add(obj)
+    app.db_session.commit()
+
+
+@pytest.fixture(scope="function")
+def fill_db(test_client):
+    fill_db_with_candidate(app)
+    yield test_client
