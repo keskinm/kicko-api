@@ -13,8 +13,8 @@ from api.controllers_factory import controllers
 from app import app
 from database.base import Base
 
+from test.enrich_database import fill_db_with_users
 
-from models.candidate.candidate import Candidate as mCandidate
 
 for controller in controllers:
     register_instance_methods(app, controller())
@@ -35,10 +35,7 @@ def test_client():
     ctx = app.app_context()
     ctx.push()
     try:
-        TestingSessionLocal = sessionmaker(
-            autocommit=False, autoflush=False, bind=test_engine
-        )
-        with mock.patch("api.common.SessionLocal", TestingSessionLocal):
+        with mock.patch("api.common.SessionLocal", app.db_session):
             yield testing_client
     finally:
         ctx.pop()
@@ -47,22 +44,7 @@ def test_client():
         test_engine.dispose()
 
 
-def fill_db_with_candidate(app):
-    """Fill database with a Candidate instance."""
-    obj = mCandidate(
-        firebase_id="1234",
-        username="toto",
-        password="toto",
-        email="toto@gmail.com",
-        country="France",
-        zone="",
-        phone_number="070000000",
-    )
-    app.db_session.add(obj)
-    app.db_session.commit()
-
-
 @pytest.fixture(scope="function")
 def filled_db_test_client(test_client):
-    fill_db_with_candidate(app)
+    fill_db_with_users(app)
     yield test_client
