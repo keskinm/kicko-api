@@ -24,3 +24,13 @@ class Professional(User):
         resp = jsonify({})
         resp.status_code = 200
         return resp
+
+    @staticmethod
+    @app.route("/api/professional_get_profile/<pro_id>", methods=["GET"])
+    def professional_get_profile(pro_id):
+        pro = row_to_dict(
+            make_query(TProfessional, TProfessional.id == pro_id).one()
+        )
+        result = jsonify(pro)
+        result.status_code = 200
+        return result
