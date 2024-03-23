@@ -18,6 +18,7 @@ class UserBase(Base):
     country = Column(String)
     zone = Column(String)
     phone_number = Column(String)
+    image_id = Column(String)
 
     def __init__(
         self,
@@ -25,6 +26,7 @@ class UserBase(Base):
         username,
         password,
         email,
+        image_id=None,
         country=None,
         zone=None,
         phone_number=None,
@@ -36,6 +38,7 @@ class UserBase(Base):
         self.country = country
         self.zone = zone
         self.phone_number = phone_number
+        self.image_id = image_id
 
     def set_password(self, password):
         """Create hashed password."""

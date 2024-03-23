@@ -39,18 +39,10 @@ class Candidate(UserBase):
     )
 
     def __init__(
-        self,
-        study_level=StudyLevel.null,
-        sex=Sex.null,
-        image_id=None,
-        resume_id=None,
-        *args,
-        **kwargs
+        self, study_level=StudyLevel.null, sex=Sex.null, resume_id=None, *args, **kwargs
     ):
         super().__init__(*args, **kwargs)
 
         self.study_level = study_level
         self.sex = sex
-
-        self.image_id = image_id
         self.resume_id = resume_id
