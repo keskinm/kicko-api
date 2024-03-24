@@ -1,0 +1,1 @@
+zip -r kicko-api.zip models/ requirements/ test database/ api/
