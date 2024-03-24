@@ -1,5 +1,6 @@
 from flask import jsonify, request
 
+from api.base import instance_method_route
 from api.common import add_row, make_query, row_to_dict
 from api.user import User
 from app import app
@@ -24,6 +25,17 @@ class Professional(User):
         resp = jsonify({})
         resp.status_code = 200
         return resp
+
+    @instance_method_route("professional_update_profile/<candidate_id>", methods=["POST"])
+    def professional_update_profile(self, professional_id):
+        input_json = request.get_json(force=True)
+        query, session = make_query(
+            TProfessional, TProfessional.id == professional_id, end_session=False
+        )
+        self.replace(session, query.first(), input_json)
+        result = jsonify({"success": True})
+        result.status_code = 200
+        return result
 
     @staticmethod
     @app.route("/api/professional_get_profile/<pro_id>", methods=["GET"])
