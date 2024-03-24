@@ -21,6 +21,5 @@ CORS(app)
 def home():
     return "home"
 
-
-if __name__ == "__main__":
+if settings_group == "LOCAL" and __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
