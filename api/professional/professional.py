@@ -12,6 +12,13 @@ class Professional(User):
     """Professional User."""
 
     @staticmethod
+    def replace(session, table_row, fields):
+        for key, value in fields.items():
+            setattr(table_row, key, value)
+        session.commit()
+        session.close()
+
+    @staticmethod
     @app.route("/api/professional_register", methods=["POST"])
     def professional_register():
         input_json = request.get_json(force=True)
@@ -26,7 +33,7 @@ class Professional(User):
         resp.status_code = 200
         return resp
 
-    @instance_method_route("professional_update_profile/<candidate_id>", methods=["POST"])
+    @instance_method_route("professional_update_profile/<professional_id>", methods=["POST"])
     def professional_update_profile(self, professional_id):
         input_json = request.get_json(force=True)
         query, session = make_query(
