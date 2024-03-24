@@ -10,6 +10,8 @@
 
 ### Alembic migrations
 
+From root of the project :
+
 * Alemebic is initialized with `alembic init alembic` (once done it creates alembic 
 folder that contains migrations and no need to re-do the command)
 * To create (the first or next's) migration: `alembic revision --autogenerate -m "Initial migration"`
