@@ -1,1 +1,1 @@
-zip -r kicko-api.zip models/ requirements/ test database/ api/
+zip -r kicko-api.zip models/ requirements/ test database/ api/ app.py run.py settings.py syntax.py alembic.ini .gitignore
