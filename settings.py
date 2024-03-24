@@ -16,6 +16,14 @@ class CommonSettings:
         for controller in controllers:
             register_instance_methods(self.app, controller())
 
+    @staticmethod
+    def set_google_credentials():
+        for variable in ["GOOGLE_CREDENTIALS"]:
+            if not os.environ.get(variable):
+                raise RuntimeError(f"Environment variable {variable} is unset.")
+        cred = credentials.Certificate(os.environ.get("GOOGLE_CREDENTIALS"))
+        initialize_app(cred, {"storageBucket": "kicko-b75db.appspot.com"})
+
 
 class LocalSettings(CommonSettings):
     def __init__(self, app):
@@ -23,11 +31,7 @@ class LocalSettings(CommonSettings):
 
     def set_settings(self):
         super().set_settings()
-        for variable in ["GOOGLE_CREDENTIALS"]:
-            if not os.environ.get(variable):
-                raise RuntimeError(f"Environment variable {variable} is unset.")
-        cred = credentials.Certificate(os.environ.get("GOOGLE_CREDENTIALS"))
-        initialize_app(cred, {"storageBucket": "kicko-b75db.appspot.com"})
+        self.set_google_credentials()
         self.register_after_request_hooks()
 
     def register_after_request_hooks(self):
@@ -67,4 +71,7 @@ class TestSettings(CommonSettings):
 class ProdSettings(CommonSettings):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        raise NotImplementedError
+
+    def set_settings(self):
+        super().set_settings()
+        self.set_google_credentials()

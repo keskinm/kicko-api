@@ -1,11 +1,18 @@
 import os
 
 from flask_cors import CORS
-from settings import LocalSettings
+from settings import LocalSettings, ProdSettings
 
 from app import app
 
-LocalSettings(app)
+settings_group = os.environ.get("SETTINGS_GROUP", None)
+if settings_group == "LOCAL":
+    LocalSettings(app)
+elif settings_group == "PROD":
+    ProdSettings(app)
+else:
+    raise ValueError("SETTINGS_GROUP should be in ['LOCAL', 'PROD']")
+
 app.secret_key = os.urandom(12)
 CORS(app)
 

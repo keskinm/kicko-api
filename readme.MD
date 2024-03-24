@@ -3,6 +3,11 @@
 * Set environment variables
 * FLASK_APP=run.py flask run
 
+### Launch in prod mode:
+* Set environment variables
+* `uwsgi --http :5000 --module run:app`
+* http://localhost:5000/ should render
+
 ### Alembic migrations
 
 * Alemebic is initialized with `alembic init alembic` (once done it creates alembic 
